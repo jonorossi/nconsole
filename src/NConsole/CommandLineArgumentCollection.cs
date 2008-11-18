@@ -23,5 +23,17 @@ namespace NConsole
                 return null;
             }
         }
+
+        public bool Contains(string name)
+        {
+            foreach (CommandLineArgument argument in this)
+            {
+                if (argument.Name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace NConsole.Tests
             CommandLineArgument argument = new CommandLineArgument(new CommandLineArgumentAttribute("help"), null);
             CommandLineArgumentCollection args = new CommandLineArgumentCollection { argument };
 
-            Assert.AreEqual(null, args["Help"]);
+            Assert.IsNull(args["Help"]);
         }
 
         [Test]
@@ -28,7 +28,25 @@ namespace NConsole.Tests
         {
             CommandLineArgumentCollection args = new CommandLineArgumentCollection();
 
-            Assert.AreEqual(null, args["nonExistantArg"]);
+            Assert.IsNull(args["nonExistantArg"]);
+        }
+
+        [Test]
+        public void ContainsReturnsTrueIfArgumentIsInCollection()
+        {
+            CommandLineArgumentCollection args = new CommandLineArgumentCollection();
+
+            args.Add(new CommandLineArgument(new CommandLineArgumentAttribute("help"), null));
+
+            Assert.IsTrue(args.Contains("help"));
+        }
+
+        [Test]
+        public void ContainsReturnsFalseIfArgumentIsNotInCollection()
+        {
+            CommandLineArgumentCollection args = new CommandLineArgumentCollection();
+
+            Assert.IsFalse(args.Contains("nonExistantArg"));
         }
     }
 }

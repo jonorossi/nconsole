@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Reflection;
 
 namespace NConsole
@@ -57,13 +58,8 @@ namespace NConsole
 //                }
 
                 // Determine the name of the argument
-                //int endIndex = arg.IndexOfAny(new char[] { ':', '+', '-' }, 1);
-                //string optionName = arg.Substring(1, endIndex == -1 ? arg.Length - 1 : endIndex - 1);
-                string optionName = arg.Substring(1, arg.Length - 1);
-
-                // Determine the value of the argument
-                object optionValue;
-                optionValue = true;
+                int endIndex = arg.IndexOfAny(new[] { ':', '+', '-' }, 1);
+                string optionName = arg.Substring(1, endIndex == -1 ? arg.Length - 1 : endIndex - 1);
 
                 // Attempt to get the argument
                 CommandLineArgument argument = _arguments[optionName];
@@ -76,7 +72,26 @@ namespace NConsole
                 // If this argument is exclusive and multiple arguments have been passed on the command line then throw an exception
                 if (argument.IsExclusive && args.Length > 1)
                 {
-                    throw new CommandLineArgumentException(string.Format("The '/{0}' argument is exclusive and cannot be used with any other argument.", argument.Name));
+                    throw new CommandLineArgumentException(string.Format("The '/{0}' argument is exclusive and cannot " +
+                        "be used with any other argument.", argument.Name));
+                }
+
+                // Determine the value of the argument
+                object optionValue;
+                if (endIndex == -1)
+                {
+                    // No value was specified, so it is most likely a flag
+                    optionValue = ParseValue(argument.Type, null);
+                }
+                else if (arg[endIndex] == '+' || arg[endIndex] == '-')
+                {
+                    // Parse value with the '+' or '-'
+                    optionValue = ParseValue(argument.Type, arg.Substring(endIndex));
+                }
+                else
+                {
+                    // Parse value without the ':'
+                    optionValue = ParseValue(argument.Type, arg.Substring(endIndex + 1));
                 }
 
                 // Set the value of the option
@@ -94,6 +109,56 @@ namespace NConsole
 
             // Return the populated options class
             return options;
+        }
+
+        public object ParseValue(Type type, string stringValue)
+        {
+            if (type == typeof(bool))
+            {
+                switch (stringValue)
+                {
+                    case null:
+                    case "":
+                    case "+":
+                        return true;
+                    case "-":
+                        return false;
+                }
+            }
+            else if (type == typeof(string))
+            {
+                return stringValue;
+            }
+            else if (type == typeof(int))
+            {
+                return int.Parse(stringValue);
+            }
+            else if (type == typeof(double))
+            {
+                return double.Parse(stringValue);
+            }
+            else if (type.IsEnum)
+            {
+                return Enum.Parse(type, stringValue, true);
+            }
+            else if (type.IsArray)
+            {
+                ArrayList values = new ArrayList();
+
+                if (type.GetElementType().IsEnum)
+                {
+                    foreach (string part in stringValue.Split(','))
+                    {
+                        values.Add(Enum.Parse(type.GetElementType(), part, true));
+                    }
+                    return values.ToArray(type.GetElementType());
+                }
+
+                return stringValue.Split(',');
+            }
+
+            //TODO test
+            throw new CommandLineArgumentException(string.Format("Unsupported argument type '{0}' or value '{1}'.", type.FullName, stringValue));
         }
     }
 }

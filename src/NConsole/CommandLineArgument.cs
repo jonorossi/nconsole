@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 
 namespace NConsole
@@ -9,12 +10,12 @@ namespace NConsole
     public class CommandLineArgument
     {
 //        private Type _elementType;
-//        private bool _seenValue;
 //        private CommandLineArgumentTypes _argumentType;
         private readonly CommandLineArgumentAttribute _attribute;
         private readonly PropertyInfo _propertyInfo;
         private readonly string _name;
         private object _argumentValue;
+        private bool _seenValue;
 //        private ArrayList _collectionValues;
 //        private NameValueCollection _valuePairs;
 
@@ -38,9 +39,23 @@ namespace NConsole
             get { return _name; }
         }
 
+        public Type Type
+        {
+            get { return _propertyInfo.PropertyType; }
+        }
+
         public bool IsExclusive
         {
             get { return _attribute.Type == CommandLineArgumentTypes.Exclusive; }
+        }
+
+        public bool AllowMultiple
+        {
+            get
+            {
+                //return _attribute.Type & CommandLineArgumentTypes.Multiple;
+                return _attribute.Type == CommandLineArgumentTypes.AtMostOnce;
+            }
         }
 
         /// <summary>
@@ -49,6 +64,14 @@ namespace NConsole
         /// <param name="value">The value of the argument.</param>
         public void SetValue(object value)
         {
+            // If this argument has already been parsed once and it doesn't allow multiple
+            if (_seenValue && !AllowMultiple)
+            {
+                throw new CommandLineArgumentException("...");
+            }
+
+            _seenValue = true;
+
             _argumentValue = value;
         }
 
