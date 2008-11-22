@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using NUnit.Framework;
 
 namespace NConsole.Tests.Utils
 {
+    [DebuggerNonUserCode]
     internal class AssertEx
     {
         public static void IsExactInstanceOf<T>(object actual)

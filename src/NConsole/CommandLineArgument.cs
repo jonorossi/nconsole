@@ -31,7 +31,7 @@ namespace NConsole
             _propertyInfo = propertyInfo;
 
             // Use the name specifed on the attribute, if null use the property name
-            _name = string.IsNullOrEmpty(_attribute.Name) ? propertyInfo.Name.ToLower() : _attribute.Name;
+            _name = !string.IsNullOrEmpty(_attribute.Name) ? _attribute.Name : propertyInfo.Name.ToLower();
         }
 
         public string Name
@@ -53,9 +53,20 @@ namespace NConsole
         {
             get
             {
+                if (_attribute.Type == CommandLineArgumentTypes.Required)
+                {
+                    return true;
+                }
+
+                return false;
+
                 //return _attribute.Type & CommandLineArgumentTypes.Multiple;
-                return _attribute.Type == CommandLineArgumentTypes.AtMostOnce;
             }
+        }
+
+        public bool IsRequired
+        {
+            get { return (_attribute.Type & CommandLineArgumentTypes.Required) != 0; }
         }
 
         /// <summary>
@@ -67,7 +78,7 @@ namespace NConsole
             // If this argument has already been parsed once and it doesn't allow multiple
             if (_seenValue && !AllowMultiple)
             {
-                throw new CommandLineArgumentException("...");
+                throw new CommandLineArgumentException(string.Format("Argument '/{0}' can only appear once.", Name));
             }
 
             _seenValue = true;
@@ -77,6 +88,12 @@ namespace NConsole
 
         public void Bind(object options)
         {
+            // If this argument is required and no value has been specified
+            if (IsRequired && !_seenValue)
+            {
+                throw new CommandLineArgumentException(string.Format("Argument '/{0}' must appear at least once.", Name));
+            }
+
             _propertyInfo.SetValue(options, _argumentValue, null);
         }
     }

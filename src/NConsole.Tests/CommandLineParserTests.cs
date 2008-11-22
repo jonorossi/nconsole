@@ -106,6 +106,16 @@ namespace NConsole.Tests
             );
         }
 
+        [Test]
+        public void ThrowsWhenExclusiveArgumentUsedWithAnotherArgumentWhenSpecifiedLast()
+        {
+            var parser = new CommandLineParser<Options_HasExclusiveHelp>();
+            AssertEx.Throws<CommandLineArgumentException>(
+                "The '/help' argument is exclusive and cannot be used with any other argument.",
+                () => parser.ParseArguments(new[] { "/run", "/help" })
+            );
+        }
+
         #region Option Classes
 
         private class Options_SingleBoolArg
