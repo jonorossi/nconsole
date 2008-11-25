@@ -78,7 +78,7 @@ namespace NConsole.Tests
         }
 
         [Test]
-        public void ParseTwoBuildArguments()
+        public void ParseTwoDifferentArguments()
         {
             var parser = new CommandLineParser<Options_TwoBoolArgs>();
             var options = parser.ParseArguments(new[] { "/argument1", "/argument2" });
@@ -116,6 +116,25 @@ namespace NConsole.Tests
             );
         }
 
+        [Test]
+        public void ParserDoesNotSetValueOnNullableArgumentIfNotSpecified()
+        {
+            var parser = new CommandLineParser<Options_WithNullableInt>();
+            var options = parser.ParseArguments(new string[0]);
+
+            Assert.IsFalse(options.Timeout.HasValue);
+        }
+
+        [Test]
+        public void ParserSetsValueOfNullerableInt()
+        {
+            var parser = new CommandLineParser<Options_WithNullableInt>();
+            var options = parser.ParseArguments(new[] { "/timeout:100" });
+
+            Assert.IsTrue(options.Timeout.HasValue);
+            Assert.AreEqual(100, options.Timeout.Value);
+        }
+
         #region Option Classes
 
         private class Options_SingleBoolArg
@@ -147,14 +166,19 @@ namespace NConsole.Tests
 
         private class Options_HasExclusiveHelp
         {
-            [CommandLineArgument("help", CommandLineArgumentTypes.Exclusive)]
+            [CommandLineArgument("help", Exclusive = true)]
             public bool Help { get; set; }
 
             [CommandLineArgument("run")]
             public bool Run { get; set; }
         }
 
-        #endregion
+        public class Options_WithNullableInt
+        {
+            [CommandLineArgument]
+            public int? Timeout { get; set; }
+        }
 
+        #endregion
     }
 }

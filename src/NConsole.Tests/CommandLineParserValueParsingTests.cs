@@ -1,4 +1,5 @@
 using System;
+using NConsole.Tests.Utils;
 using NUnit.Framework;
 
 namespace NConsole.Tests
@@ -50,6 +51,14 @@ namespace NConsole.Tests
         {
             Mode1,
             Mode2
+        }
+
+        [Test]
+        public void ParseValueThrowsWithUnsupportedType()
+        {
+            AssertEx.Throws<CommandLineArgumentException>("Unsupported argument type 'System.EventArgs' or value 'SomehowAnEventArgs'.",
+                delegate { ParseValue<EventArgs>("SomehowAnEventArgs"); }
+            );
         }
 
         private static T ParseValue<T>(string stringValue)

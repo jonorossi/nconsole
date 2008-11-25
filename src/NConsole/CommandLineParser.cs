@@ -156,6 +156,11 @@ namespace NConsole
 
                 return stringValue.Split(',');
             }
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                Type underlyingType = type.GetGenericArguments()[0];
+                return ParseValue(underlyingType, stringValue);
+            }
 
             //TODO test
             throw new CommandLineArgumentException(string.Format("Unsupported argument type '{0}' or value '{1}'.", type.FullName, stringValue));

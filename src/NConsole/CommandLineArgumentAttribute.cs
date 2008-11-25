@@ -5,59 +5,34 @@ namespace NConsole
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class CommandLineArgumentAttribute : Attribute
     {
-        private string _name;
-        private readonly CommandLineArgumentTypes _type;
-
-//        private string _shortName;
-//        private string _description;
+        private readonly string _name;
 
         public CommandLineArgumentAttribute()
         {
-            _type = CommandLineArgumentTypes.AtMostOnce;
         }
 
         public CommandLineArgumentAttribute(string name)
-            : this(name, CommandLineArgumentTypes.AtMostOnce)
-        {
-        }
-
-        public CommandLineArgumentAttribute(CommandLineArgumentTypes type)
-        {
-            _type = type;
-        }
-
-        public CommandLineArgumentAttribute(string name, CommandLineArgumentTypes type)
         {
             _name = name;
-            _type = type;
 
             if (string.IsNullOrEmpty(_name))
             {
-                throw new CommandLineArgumentException("Command line arguments must have a name. Use the default constructor if the property name should be used.");
+                throw new CommandLineArgumentException("Command line arguments must have a name. Use the default " +
+                    "constructor if the name should match the property name.");
             }
         }
 
         public string Name
         {
             get { return _name; }
-            //internal set { _name = value; }
         }
 
-        //        public string ShortName
-        //        {
-        //            get { return _shortName; }
-        //set { _shortName = value; }
-        //        }
+        //public bool ShortName { get; set; }
 
-        public CommandLineArgumentTypes Type
-        {
-            get { return _type; }
-        }
+        public bool Required { get; set; }
 
-        //        public string Description
-        //        {
-        //            get { return _description; }
-        //            set { _description = value; }
-        //        }
+        public bool Exclusive { get; set; }
+
+        //public bool Description { get; set; }
     }
 }

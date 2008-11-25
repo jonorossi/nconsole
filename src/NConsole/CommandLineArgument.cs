@@ -46,17 +46,17 @@ namespace NConsole
 
         public bool IsExclusive
         {
-            get { return _attribute.Type == CommandLineArgumentTypes.Exclusive; }
+            get { return _attribute.Exclusive; }
         }
 
         public bool AllowMultiple
         {
             get
             {
-                if (_attribute.Type == CommandLineArgumentTypes.Required)
-                {
-                    return true;
-                }
+//                if (_attribute.Type == CommandLineArgumentTypes.Required)
+//                {
+//                    return true;
+//                }
 
                 return false;
 
@@ -66,7 +66,7 @@ namespace NConsole
 
         public bool IsRequired
         {
-            get { return (_attribute.Type & CommandLineArgumentTypes.Required) != 0; }
+            get { return _attribute.Required; }
         }
 
         /// <summary>

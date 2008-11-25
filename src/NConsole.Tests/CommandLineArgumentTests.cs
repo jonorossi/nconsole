@@ -1,3 +1,4 @@
+using NConsole.Tests.Utils;
 using NUnit.Framework;
 
 namespace NConsole.Tests
@@ -18,6 +19,17 @@ namespace NConsole.Tests
             Assert.IsNull(options.StringProperty);
             argument.Bind(options);
             Assert.AreEqual("ExampleValue", options.StringProperty);
+        }
+
+        [Test]
+        public void SetValueThrowsIfNotCollectionAndSetValueHasAlreadyBeenCalled()
+        {
+            CommandLineArgument argument = new CommandLineArgument(new CommandLineArgumentAttribute("arg"), null);
+            argument.SetValue("firstValue");
+
+            AssertEx.Throws<CommandLineArgumentException>("Argument '/arg' can only appear once.",
+                delegate { argument.SetValue("secondValue"); }
+            );
         }
 
         #region Option Classes
