@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("NConsole")]
@@ -18,3 +19,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("0.1.0.0")]
 
 [assembly: CLSCompliant(true)]
+
+[assembly: InternalsVisibleTo("NConsole.Tests")]

@@ -4,28 +4,48 @@ namespace NConsole.Demo
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            var parser = new CommandLineParser<CommandLineOptions>();
-            CommandLineOptions options = parser.ParseArguments(args);
+            // Parse the command line arguments
+            CommandLineParser<CommandLineOptions> parser = new CommandLineParser<CommandLineOptions>();
+            CommandLineOptions options;
+            try
+            {
+                options = parser.ParseArguments(args);
+            }
+            catch (CommandLineArgumentException claex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("ERROR: " + claex.Message);
+                Console.ResetColor();
 
-            Console.WriteLine("Mode: {0}", options.Mode);
-            Console.WriteLine("Server: {0}", options.Server);
-            Console.WriteLine("Database: {0}", options.Database);
-            Console.WriteLine("Timeout: {0} (HasValue: {1})", options.Timeout.GetValueOrDefault(), options.Timeout.HasValue);
+                Console.WriteLine();
+                Console.WriteLine(parser.Usage);
 
-            Console.WriteLine();
-            Console.WriteLine("Press any key to exit");
-            Console.ReadLine();
+                return 1;
+            }
+
+            if (options.ShowHelp)
+            {
+                Console.WriteLine(parser.Usage);
+                return 0;
+            }
+
+            if (options.Mode == CommandLineOptions.AppMode.All)
+            {
+                // Normal application operation
+            }
+
+            return 0;
         }
     }
 
     internal class CommandLineOptions
     {
-        internal enum AppMode
-        {
-            All, Mode1, Mode2
-        }
+        internal enum AppMode { All, Mode1, Mode2 }
+
+        [CommandLineArgument("help", Exclusive = true, Description = "Display this help text")]
+        public bool ShowHelp { get; set; }
 
         [CommandLineArgument(Required = true)]
         public AppMode Mode { get; set; }
@@ -38,5 +58,8 @@ namespace NConsole.Demo
 
         [CommandLineArgument]
         public int? Timeout { get; set; }
+
+        [CommandLineArgument]
+        public string[] DbObjects { get; set; }
     }
 }

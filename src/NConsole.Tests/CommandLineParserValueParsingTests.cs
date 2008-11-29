@@ -31,6 +31,14 @@ namespace NConsole.Tests
         }
 
         [Test]
+        public void QuotedString()
+        {
+            Assert.AreEqual("First Second Third", ParseValue<string>("First Second Third"));
+
+            Assert.AreEqual(new[] { "first second", "text2" }, ParseValue<string[]>("first second,text2"));
+        }
+
+        [Test]
         public void Numeric()
         {
             Assert.AreEqual(12345, ParseValue<int>("12345"));

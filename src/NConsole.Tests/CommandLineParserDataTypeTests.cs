@@ -61,5 +61,30 @@ namespace NConsole.Tests
             [CommandLineArgument]
             public double DoubleArg { get; set; }
         }
+
+        [Test]
+        public void ParserDoesNotSetValueOnNullableArgumentIfNotSpecified()
+        {
+            var parser = new CommandLineParser<Options_WithNullableInt>();
+            var options = parser.ParseArguments(new string[0]);
+
+            Assert.IsFalse(options.Timeout.HasValue);
+        }
+
+        [Test]
+        public void ParserSetsValueOfNullerableInt()
+        {
+            var parser = new CommandLineParser<Options_WithNullableInt>();
+            var options = parser.ParseArguments(new[] { "/timeout:100" });
+
+            Assert.IsTrue(options.Timeout.HasValue);
+            Assert.AreEqual(100, options.Timeout.Value);
+        }
+
+        private class Options_WithNullableInt
+        {
+            [CommandLineArgument]
+            public int? Timeout { get; set; }
+        }
     }
 }

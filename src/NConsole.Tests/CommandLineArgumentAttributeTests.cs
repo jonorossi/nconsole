@@ -24,6 +24,7 @@ namespace NConsole.Tests
             Assert.IsNull(attribute.Name);
             Assert.IsFalse(attribute.Required);
             Assert.IsFalse(attribute.Exclusive);
+            Assert.IsNull(attribute.Description);
         }
 
         [Test]
@@ -32,10 +33,12 @@ namespace NConsole.Tests
             CommandLineArgumentAttribute attribute = new CommandLineArgumentAttribute("arg");
             attribute.Required = true;
             attribute.Exclusive = true;
+            attribute.Description = "Example description";
 
             Assert.AreEqual("arg", attribute.Name);
             Assert.IsTrue(attribute.Required);
             Assert.IsTrue(attribute.Exclusive);
+            Assert.AreEqual("Example description", attribute.Description);
         }
     }
 }

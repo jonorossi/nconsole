@@ -32,6 +32,18 @@ namespace NConsole.Tests
             );
         }
 
+        [Test]
+        public void ArgumentBindThrowsIfRequiredSetValueNotCalled()
+        {
+            CommandLineArgumentAttribute attribute = new CommandLineArgumentAttribute("arg");
+            attribute.Required = true;
+            CommandLineArgument argument = new CommandLineArgument(attribute, null);
+
+            AssertEx.Throws<CommandLineArgumentException>("Argument '/arg' must appear at least once.",
+                delegate { argument.Bind(null); }
+            );
+        }
+
         #region Option Classes
 
         private class Options_OneStringProperty

@@ -48,7 +48,6 @@
     <Compile Include="CommandLineArgumentAttributeTests.cs" />
     <Compile Include="CommandLineArgumentCollectionTests.cs" />
     <Compile Include="CommandLineArgumentTests.cs" />
-    <Compile Include="CommandLineParserArgumentTypeTests.cs" />
     <Compile Include="CommandLineParserDataTypeTests.cs" />
     <Compile Include="CommandLineParserTests.cs" />
     <Compile Include="CommandLineParserValueParsingTests.cs" />

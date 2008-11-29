@@ -100,6 +100,7 @@ namespace NConsole.Tests
         public void ThrowsWhenExclusiveArgumentUsedWithAnotherArgument()
         {
             var parser = new CommandLineParser<Options_HasExclusiveHelp>();
+
             AssertEx.Throws<CommandLineArgumentException>(
                 "The '/help' argument is exclusive and cannot be used with any other argument.",
                 () => parser.ParseArguments(new[] { "/help", "/run" })
@@ -107,9 +108,10 @@ namespace NConsole.Tests
         }
 
         [Test]
-        public void ThrowsWhenExclusiveArgumentUsedWithAnotherArgumentWhenSpecifiedLast()
+        public void ThrowsWhenExclusiveArgumentSpecifiedLastAndUsedWithAnotherArgument()
         {
             var parser = new CommandLineParser<Options_HasExclusiveHelp>();
+
             AssertEx.Throws<CommandLineArgumentException>(
                 "The '/help' argument is exclusive and cannot be used with any other argument.",
                 () => parser.ParseArguments(new[] { "/run", "/help" })
@@ -117,22 +119,33 @@ namespace NConsole.Tests
         }
 
         [Test]
-        public void ParserDoesNotSetValueOnNullableArgumentIfNotSpecified()
+        public void IgnoresRequiredArgumentsWhenExclusiveArgumentSpecified()
         {
-            var parser = new CommandLineParser<Options_WithNullableInt>();
-            var options = parser.ParseArguments(new string[0]);
+            var parser = new CommandLineParser<Options_HasExclusiveHelpAndRequiredMode>();
+            var options = parser.ParseArguments(new[] { "/help" });
 
-            Assert.IsFalse(options.Timeout.HasValue);
+            Assert.IsTrue(options.Help);
+            Assert.IsNull(options.Run);
         }
 
         [Test]
-        public void ParserSetsValueOfNullerableInt()
+        public void ParsesDoubleQuotedStringValues()
         {
-            var parser = new CommandLineParser<Options_WithNullableInt>();
-            var options = parser.ParseArguments(new[] { "/timeout:100" });
+            var parser = new CommandLineParser<Options_WithStringArg>();
+            var options = parser.ParseArguments(new[] { "/arg:\"First Second Third\"" });
 
-            Assert.IsTrue(options.Timeout.HasValue);
-            Assert.AreEqual(100, options.Timeout.Value);
+            Assert.AreEqual("First Second Third", options.Argument);
+        }
+
+        [Test]
+        public void ParsesDoubleQuotedStringValuesInArray()
+        {
+            var parser = new CommandLineParser<Options_WithStringArg>();
+            var options = parser.ParseArguments(new[] { "/array:\"First Second Third\",NextValue" });
+
+            Assert.AreEqual(2, options.ArrayArgument.Length);
+            Assert.AreEqual("First Second Third", options.ArrayArgument[0]);
+            Assert.AreEqual("NextValue", options.ArrayArgument[1]);
         }
 
         #region Option Classes
@@ -173,10 +186,22 @@ namespace NConsole.Tests
             public bool Run { get; set; }
         }
 
-        public class Options_WithNullableInt
+        private class Options_HasExclusiveHelpAndRequiredMode
         {
-            [CommandLineArgument]
-            public int? Timeout { get; set; }
+            [CommandLineArgument("help", Exclusive = true)]
+            public bool Help { get; set; }
+
+            [CommandLineArgument("mode", Required = true)]
+            public string Run { get; set; }
+        }
+
+        private class Options_WithStringArg
+        {
+            [CommandLineArgument("arg")]
+            public string Argument { get; set; }
+
+            [CommandLineArgument("array")]
+            public string[] ArrayArgument { get; set; }
         }
 
         #endregion

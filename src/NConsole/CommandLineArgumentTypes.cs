@@ -1,10 +1,8 @@
-using System;
-
 namespace NConsole
 {
-    [Flags]
-    public enum CommandLineArgumentTypes
-    {
+//    [Flags]
+//    public enum CommandLineArgumentTypes
+//    {
         // === Standard/Non-Collection Arguments ===
         // 0..1     AtMostOnce                  // Default for standard arguments
         // 1        AtMostOnce | Required       // Only need to specify Required because it it automatically 0..1
@@ -37,16 +35,16 @@ namespace NConsole
 
 
         // 0..1
-        AtMostOnce/* = 0*/,
+//        AtMostOnce/* = 0*/,
 
         // Must be in the range 0..1
-        Required/* = 1*/,
+//        Required/* = 1*/,
 
 //        Unique = 0x02,
 
         // 0..n
-        Multiple = 0x04,
-        Exclusive/* = 0x08*/,
+//        Multiple = 0x04,
+//        Exclusive/* = 0x08*/,
 //        MultipleUnique = Multiple | Unique,
-    }
+//    }
 }

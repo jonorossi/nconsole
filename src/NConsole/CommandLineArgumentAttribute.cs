@@ -33,6 +33,6 @@ namespace NConsole
 
         public bool Exclusive { get; set; }
 
-        //public bool Description { get; set; }
+        public string Description { get; set; }
     }
 }

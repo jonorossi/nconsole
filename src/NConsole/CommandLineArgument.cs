@@ -10,7 +10,6 @@ namespace NConsole
     public class CommandLineArgument
     {
 //        private Type _elementType;
-//        private CommandLineArgumentTypes _argumentType;
         private readonly CommandLineArgumentAttribute _attribute;
         private readonly PropertyInfo _propertyInfo;
         private readonly string _name;
@@ -31,7 +30,7 @@ namespace NConsole
             _propertyInfo = propertyInfo;
 
             // Use the name specifed on the attribute, if null use the property name
-            _name = !string.IsNullOrEmpty(_attribute.Name) ? _attribute.Name : propertyInfo.Name.ToLower();
+            _name = !string.IsNullOrEmpty(_attribute.Name) ? _attribute.Name : propertyInfo.Name.ToLowerInvariant();
         }
 
         public string Name
@@ -39,9 +38,14 @@ namespace NConsole
             get { return _name; }
         }
 
-        public Type Type
+        public Type ValueType
         {
             get { return _propertyInfo.PropertyType; }
+        }
+
+        public bool IsRequired
+        {
+            get { return _attribute.Required; }
         }
 
         public bool IsExclusive
@@ -49,24 +53,24 @@ namespace NConsole
             get { return _attribute.Exclusive; }
         }
 
+        public string Description
+        {
+            get { return _attribute.Description; }
+        }
+
         public bool AllowMultiple
         {
             get
             {
-//                if (_attribute.Type == CommandLineArgumentTypes.Required)
+//                if (_attribute.ValueType == CommandLineArgumentTypes.Required)
 //                {
 //                    return true;
 //                }
 
                 return false;
 
-                //return _attribute.Type & CommandLineArgumentTypes.Multiple;
+                //return _attribute.ValueType & CommandLineArgumentTypes.Multiple;
             }
-        }
-
-        public bool IsRequired
-        {
-            get { return _attribute.Required; }
         }
 
         /// <summary>
@@ -88,8 +92,8 @@ namespace NConsole
 
         public void Bind(object options)
         {
-            // If this argument is required and no value has been specified
-            if (IsRequired && !_seenValue)
+            // If this argument hasn't been specified and it is required
+            if (!_seenValue && IsRequired)
             {
                 throw new CommandLineArgumentException(string.Format("Argument '/{0}' must appear at least once.", Name));
             }
