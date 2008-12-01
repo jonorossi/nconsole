@@ -141,18 +141,37 @@ namespace NConsole
                 Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
 
                 // Usage header
-                helpText.AppendFormat("Usage: {0} [options]\n", Path.GetFileNameWithoutExtension(assembly.CodeBase));
+                helpText.AppendFormat("Usage: {0} [options]", Path.GetFileNameWithoutExtension(assembly.CodeBase));
+                helpText.AppendLine();
 
+                // Output each option
                 helpText.AppendLine("Options:");
                 foreach (CommandLineArgument argument in _arguments)
                 {
-                    Console.WriteLine("  /{0}\t\t{1}", argument.Name, argument.Description);
-                }
+                    string optionUsage = "  /" + argument.Name;
 
-//            Console.WriteLine("  /help\t\tDisplay this help text");
-//            Console.WriteLine("  /nologo\t\tSuppress version and copyright message");
-//            Console.WriteLine("  /version\t\tDisplay software and configuration versions");
-//            Console.WriteLine("  /target:<targets>\t\tSpecify targets to run (Short form: /t)");
+                    // Append specific usage by the value type
+                    if (argument.ValueType == typeof(bool))
+                    {
+                        optionUsage += "[+|-]";
+                    }
+                    else if (argument.ValueType == typeof(string))
+                    {
+                        optionUsage += ":<text>";
+                    }
+                    else if (argument.ValueType == typeof(int))
+                    {
+                        optionUsage += ":<number>";
+                    }
+
+                    // Append description
+                    if (!string.IsNullOrEmpty(argument.Description))
+                    {
+                        optionUsage += "\t\t" + argument.Description;
+                    }
+
+                    helpText.AppendLine(optionUsage);
+                }
 
                 return helpText.ToString();
             }

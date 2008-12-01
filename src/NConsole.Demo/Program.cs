@@ -61,5 +61,9 @@ namespace NConsole.Demo
 
         [CommandLineArgument]
         public string[] DbObjects { get; set; }
+
+        //            Console.WriteLine("  /nologo\t\tSuppress version and copyright message");
+        //            Console.WriteLine("  /version\t\tDisplay software and configuration versions");
+        //            Console.WriteLine("  /target:<targets>\t\tSpecify targets to run (Short form: /t)");
     }
 }

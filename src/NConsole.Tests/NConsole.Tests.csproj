@@ -49,6 +49,7 @@
     <Compile Include="CommandLineArgumentCollectionTests.cs" />
     <Compile Include="CommandLineArgumentTests.cs" />
     <Compile Include="CommandLineParserDataTypeTests.cs" />
+    <Compile Include="CommandLineParserOutputUsageTests.cs" />
     <Compile Include="CommandLineParserTests.cs" />
     <Compile Include="CommandLineParserValueParsingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
