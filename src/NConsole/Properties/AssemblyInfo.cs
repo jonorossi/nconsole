@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("NConsole")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A .NET command line parser.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Jonathon Rossi")]
 [assembly: AssemblyProduct("NConsole")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Jonathon Rossi")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

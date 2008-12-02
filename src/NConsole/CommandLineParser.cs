@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -130,7 +131,6 @@ namespace NConsole
             return options;
         }
 
-        //TODO: Write tests and finish
         public string Usage
         {
             get
@@ -150,24 +150,41 @@ namespace NConsole
                 {
                     string optionUsage = "  /" + argument.Name;
 
+                    // If the value type is nullable then use the underlying type instead
+                    Type valueType = argument.ValueType;
+                    if (valueType.IsGenericType && valueType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        valueType = valueType.GetGenericArguments()[0];
+                    }
+
                     // Append specific usage by the value type
-                    if (argument.ValueType == typeof(bool))
+                    if (valueType == typeof(bool))
                     {
                         optionUsage += "[+|-]";
                     }
-                    else if (argument.ValueType == typeof(string))
+                    else if (valueType == typeof(string))
                     {
                         optionUsage += ":<text>";
                     }
-                    else if (argument.ValueType == typeof(int))
+                    else if (valueType == typeof(int))
                     {
                         optionUsage += ":<number>";
+                    }
+                    else if (valueType.IsEnum)
+                    {
+                        optionUsage += ":<";
+                        foreach (string enumName in Enum.GetNames(valueType))
+                        {
+                            optionUsage += enumName.ToLower() + "|";
+                        }
+                        optionUsage += ">";
                     }
 
                     // Append description
                     if (!string.IsNullOrEmpty(argument.Description))
                     {
-                        optionUsage += "\t\t" + argument.Description;
+                        // Pad the argument definition so that the descriptions line up
+                        optionUsage = string.Format("{0,-28}  {1}", optionUsage, argument.Description);
                     }
 
                     helpText.AppendLine(optionUsage);

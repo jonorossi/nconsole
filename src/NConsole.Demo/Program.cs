@@ -33,7 +33,7 @@ namespace NConsole.Demo
 
             if (options.Mode == CommandLineOptions.AppMode.All)
             {
-                // Normal application operation
+                // ... Normal application operation ...
             }
 
             return 0;
@@ -44,23 +44,23 @@ namespace NConsole.Demo
     {
         internal enum AppMode { All, Mode1, Mode2 }
 
-        [CommandLineArgument("help", Exclusive = true, Description = "Display this help text")]
-        public bool ShowHelp { get; set; }
-
-        [CommandLineArgument(Required = true)]
+        [CommandLineArgument(Required = true, Description = "Select the function for the program to perform")]
         public AppMode Mode { get; set; }
 
-        [CommandLineArgument]
+        [CommandLineArgument(Description = "The server to connect to")]
         public string Server { get; set; }
 
-        [CommandLineArgument("db")]
+        [CommandLineArgument("db", Description = "The database to use")]
         public string Database { get; set; }
 
-        [CommandLineArgument]
+        [CommandLineArgument(Description = "The total amount of time to watch for the operations to complete")]
         public int? Timeout { get; set; }
 
-        [CommandLineArgument]
+        [CommandLineArgument(Description = "The database objects to include in the functions")]
         public string[] DbObjects { get; set; }
+
+        [CommandLineArgument("help", Exclusive = true, Description = "Display this help text")]
+        public bool ShowHelp { get; set; }
 
         //            Console.WriteLine("  /nologo\t\tSuppress version and copyright message");
         //            Console.WriteLine("  /version\t\tDisplay software and configuration versions");

@@ -32,7 +32,26 @@ namespace NConsole.Tests
             string[] lines = GetUsageLinesFor<Options_SingleArgWithDescription>();
 
             Assert.AreEqual(4, lines.Length);
-            Assert.AreEqual("  /help[+|-]\t\tExample description", lines[2]);
+            Assert.AreEqual("  /help[+|-]                  Example description", lines[2]);
+        }
+
+        [Test]
+        public void DescriptionLinesUpWithLongArgumentNames()
+        {
+            string[] lines = GetUsageLinesFor<Options_OneShortNameOneLonGName>();
+
+            Assert.AreEqual(5, lines.Length);
+            Assert.AreEqual("  /short:<text>               Short description", lines[2]);
+            Assert.AreEqual("  /thisisalongargumentname:<text>  Long description", lines[3]);
+        }
+
+        [Test]
+        public void DescriptionLinesUpWithShortArgumentNames()
+        {
+            string[] lines = GetUsageLinesFor<Options_OneShortNameWithDescription>();
+
+            Assert.AreEqual(4, lines.Length);
+            Assert.AreEqual("  /db:<text>                  The database to connect to", lines[2]);
         }
 
         [Test]
@@ -56,9 +75,19 @@ namespace NConsole.Tests
         [Test]
         public void OutputsUsageForNullableNumberArg()
         {
-            
+            string[] lines = GetUsageLinesFor<Options_SingleNullableNumericArg>();
 
-            Assert.Fail();
+            Assert.AreEqual(4, lines.Length);
+            Assert.AreEqual("  /timeout:<number>", lines[2]);
+        }
+
+        [Test]
+        public void OutputsUsageForEnumeration()
+        {
+            string[] lines = GetUsageLinesFor<Options_SingleEnumArg>();
+
+            Assert.AreEqual(4, lines.Length);
+            Assert.AreEqual("  /mode:<all|mode1|mode2>", lines[2]);
         }
 
         private static string[] GetUsageLinesFor<TOptions>() where TOptions : class, new()
@@ -85,6 +114,21 @@ namespace NConsole.Tests
             public bool Help { get; set; }
         }
 
+        private class Options_OneShortNameOneLonGName
+        {
+            [CommandLineArgument(Description = "Short description")]
+            public string Short { get; set; }
+
+            [CommandLineArgument(Description = "Long description")]
+            public string ThisIsALongArgumentName { get; set; }
+        }
+
+        private class Options_OneShortNameWithDescription
+        {
+            [CommandLineArgument("db", Description = "The database to connect to")]
+            public string Database { get; set; }
+        }
+
         private class Options_SingleRenamedArg
         {
             [CommandLineArgument("db")]
@@ -95,6 +139,20 @@ namespace NConsole.Tests
         {
             [CommandLineArgument]
             public int Timeout { get; set; }
+        }
+
+        private class Options_SingleNullableNumericArg
+        {
+            [CommandLineArgument]
+            public int? Timeout { get; set; }
+        }
+
+        private class Options_SingleEnumArg
+        {
+            internal enum Mode { All, Mode1, Mode2 }
+
+            [CommandLineArgument("mode")]
+            public Mode AppMode { get; set; }
         }
 
         #endregion
