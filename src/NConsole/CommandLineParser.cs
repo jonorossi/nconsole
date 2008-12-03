@@ -1,24 +1,28 @@
 using System;
 using System.Collections;
-using System.Collections.Specialized;
 using System.IO;
 using System.Reflection;
 using System.Text;
 
 namespace NConsole
 {
-    //TODO: Should the options class become an interface? Does a class give you anything an interface doesn't?
-
+    /// <summary>
+    /// Provides parsing of command line arguments.
+    /// </summary>
+    /// <typeparam name="TOptions">The options class that provides metadata about the allowed arguments. The
+    ///   <see cref="CommandLineParser{TOptions}" /> will return an instance of this type when parsing.</typeparam>
     public class CommandLineParser<TOptions> where TOptions : class, new()
     {
         private readonly CommandLineArgumentCollection _arguments = new CommandLineArgumentCollection();
 
+        /// <summary>
+        /// Creates a new <see cref="CommandLineParser{TOptions}"/>.
+        /// </summary>
         public CommandLineParser()
         {
             // Build up a list of command line arguments that will later be used for parsing
             foreach (PropertyInfo propertyInfo in typeof(TOptions).GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-
                 if (propertyInfo.CanWrite/* || typeof(ICollection).IsAssignableFrom(propertyInfo.PropertyType)*/)
                 {
                     // Attempt to build an argument from a CommandLineArgumentAttribute
@@ -31,6 +35,11 @@ namespace NConsole
             }
         }
 
+        /// <summary>
+        /// Parses the comment line arguments and builds an options object the represents the arguments.
+        /// </summary>
+        /// <param name="args">The command line arguments.</param>
+        /// <returns>The options object that represents the command line arguments.</returns>
         public TOptions ParseArguments(string[] args)
         {
             // Check arguments
@@ -72,7 +81,6 @@ namespace NConsole
                 CommandLineArgument argument = _arguments[optionName];
                 if (argument == null)
                 {
-                    //TODO make sure this is tested
                     throw new CommandLineArgumentException(string.Format("Unknown argument '{0}'.", arg));
                 }
 
@@ -131,6 +139,9 @@ namespace NConsole
             return options;
         }
 
+        /// <summary>
+        /// Provides detailed usage information of each command line argument to display to the user.
+        /// </summary>
         public string Usage
         {
             get
@@ -141,8 +152,19 @@ namespace NConsole
                 Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
 
                 // Usage header
-                helpText.AppendFormat("Usage: {0} [options]", Path.GetFileNameWithoutExtension(assembly.CodeBase));
-                helpText.AppendLine();
+                helpText.AppendFormat("Usage: {0}", Path.GetFileNameWithoutExtension(assembly.CodeBase));
+
+                // Required arguments in the header
+                foreach (CommandLineArgument argument in _arguments)
+                {
+                    if (argument.IsRequired)
+                    {
+                        helpText.AppendFormat(" /{0}{1}", argument.Name, GetOptionUsage(argument.ValueType));
+                    }
+                }
+
+                // End of usage header
+                helpText.AppendLine(" [options]");
 
                 // Output each option
                 helpText.AppendLine("Options:");
@@ -158,27 +180,7 @@ namespace NConsole
                     }
 
                     // Append specific usage by the value type
-                    if (valueType == typeof(bool))
-                    {
-                        optionUsage += "[+|-]";
-                    }
-                    else if (valueType == typeof(string))
-                    {
-                        optionUsage += ":<text>";
-                    }
-                    else if (valueType == typeof(int))
-                    {
-                        optionUsage += ":<number>";
-                    }
-                    else if (valueType.IsEnum)
-                    {
-                        optionUsage += ":<";
-                        foreach (string enumName in Enum.GetNames(valueType))
-                        {
-                            optionUsage += enumName.ToLower() + "|";
-                        }
-                        optionUsage += ">";
-                    }
+                    optionUsage += GetOptionUsage(valueType);
 
                     // Append description
                     if (!string.IsNullOrEmpty(argument.Description))
@@ -194,19 +196,30 @@ namespace NConsole
             }
         }
 
-//        public void OutputDebug()
-//        {
-//            Console.WriteLine("Mode: {0}", options.Mode);
-//            Console.WriteLine("Server: {0}", options.Server);
-//            Console.WriteLine("Database: {0}", options.Database);
-//            Console.WriteLine("Timeout: {0} (HasValue: {1})", options.Timeout.GetValueOrDefault(), options.Timeout.HasValue);
-//            Console.WriteLine("DbObjects [Length: {0}] {{", options.DbObjects.Length);
-//            foreach (string dbObject in options.DbObjects)
-//            {
-//                Console.WriteLine("    {0}", dbObject);
-//            }
-//            Console.WriteLine("}");
-//        }
+        private static string GetOptionUsage(Type valueType)
+        {
+            if (valueType == typeof(bool))
+            {
+                return "[+|-]";
+            }
+            if (valueType == typeof(string))
+            {
+                return ":<text>";
+            }
+            if (valueType == typeof(int))
+            {
+                return ":<number>";
+            }
+            if (valueType.IsEnum)
+            {
+                return ":<" + string.Join("|", Enum.GetNames(valueType)).ToLower() + ">";
+            }
+            if (valueType.IsArray)
+            {
+                return GetOptionUsage(valueType.GetElementType()) + "[,...]";
+            }
+            return string.Empty;
+        }
 
         internal object ParseValue(Type type, string value)
         {
@@ -220,32 +233,30 @@ namespace NConsole
                 {
                     return false;
                 }
-                //TODO test
                 throw new CommandLineArgumentException("Boolean arguments can only be followed by '', '+' or '-'.");
             }
-            else if (type == typeof(string))
+            if (type == typeof(string))
             {
                 // Remove starting and trailing double quotes if they are there
                 if (value.StartsWith("\"") && value.EndsWith("\""))
                 {
                     return value.Substring(1, value.Length - 2);
                 }
-
                 return value;
             }
-            else if (type == typeof(int))
+            if (type == typeof(int))
             {
                 return int.Parse(value);
             }
-            else if (type == typeof(double))
+            if (type == typeof(double))
             {
                 return double.Parse(value);
             }
-            else if (type.IsEnum)
+            if (type.IsEnum)
             {
                 return Enum.Parse(type, value, true);
             }
-            else if (type.IsArray)
+            if (type.IsArray)
             {
                 // Determine the type of the array's elements
                 Type elementType;
@@ -267,12 +278,11 @@ namespace NConsole
 
                 return values.ToArray(type.GetElementType());
             }
-            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 Type underlyingType = type.GetGenericArguments()[0];
                 return ParseValue(underlyingType, value);
             }
-
             throw new CommandLineArgumentException(string.Format("Unsupported argument type '{0}' or value '{1}'.", type.FullName, value));
         }
     }

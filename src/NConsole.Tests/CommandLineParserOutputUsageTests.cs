@@ -64,6 +64,17 @@ namespace NConsole.Tests
         }
 
         [Test]
+        public void OutputsUsageForStringArray()
+        {
+            string[] lines = GetUsageLinesFor<Options_SeveralArrayArgs>();
+
+            Assert.AreEqual(6, lines.Length);
+            Assert.AreEqual("  /strings:<text>[,...]", lines[2]);
+            Assert.AreEqual("  /integers:<number>[,...]", lines[3]);
+            Assert.AreEqual("  /modes:<all|mode1|mode2>[,...]", lines[4]);
+        }
+
+        [Test]
         public void OutputsUsageForNumberArg()
         {
             string[] lines = GetUsageLinesFor<Options_SingleNumericArg>();
@@ -90,6 +101,26 @@ namespace NConsole.Tests
             Assert.AreEqual("  /mode:<all|mode1|mode2>", lines[2]);
         }
 
+        [Test]
+        public void OutputsRequiredArgumentsInUsageHeader()
+        {
+            string[] lines = GetUsageLinesFor<Options_SingleEnumArg>();
+
+            Assert.AreEqual(4, lines.Length);
+            Assert.AreEqual("Usage: NConsole.Tests /mode:<all|mode1|mode2> [options]", lines[0]);
+            Assert.AreEqual("Options:", lines[1]);
+            Assert.AreEqual("  /mode:<all|mode1|mode2>", lines[2]);
+        }
+
+        [Test]
+        public void OutputsTwoRequiredArgumentsInUsageHeader()
+        {
+            string[] lines = GetUsageLinesFor<Options_TwoRequiredArgs>();
+
+            Assert.AreEqual(5, lines.Length);
+            Assert.AreEqual("Usage: NConsole.Tests /arg1:<text> /arg2:<text> [options]", lines[0]);
+        }
+
         private static string[] GetUsageLinesFor<TOptions>() where TOptions : class, new()
         {
             var parser = new CommandLineParser<TOptions>();
@@ -97,6 +128,10 @@ namespace NConsole.Tests
         }
 
         #region Option Classes
+
+// ReSharper disable UnusedMemberInPrivateClass
+        private enum Mode { All, Mode1, Mode2 }
+// ReSharper restore UnusedMemberInPrivateClass
 
         private class Options_NoArgs
         {
@@ -135,6 +170,18 @@ namespace NConsole.Tests
             public string Database { get; set; }
         }
 
+        private class Options_SeveralArrayArgs
+        {
+            [CommandLineArgument]
+            public string[] Strings { get; set; }
+
+            [CommandLineArgument]
+            public int[] Integers { get; set; }
+
+            [CommandLineArgument]
+            public Mode[] Modes { get; set; }
+        }
+
         private class Options_SingleNumericArg
         {
             [CommandLineArgument]
@@ -149,10 +196,17 @@ namespace NConsole.Tests
 
         private class Options_SingleEnumArg
         {
-            internal enum Mode { All, Mode1, Mode2 }
-
-            [CommandLineArgument("mode")]
+            [CommandLineArgument("mode", Required = true)]
             public Mode AppMode { get; set; }
+        }
+
+        private class Options_TwoRequiredArgs
+        {
+            [CommandLineArgument(Required = true)]
+            public string Arg1 { get; set; }
+
+            [CommandLineArgument(Required = true)]
+            public string Arg2 { get; set; }
         }
 
         #endregion

@@ -30,7 +30,7 @@ namespace NConsole
             _propertyInfo = propertyInfo;
 
             // Use the name specifed on the attribute, if null use the property name
-            _name = !string.IsNullOrEmpty(_attribute.Name) ? _attribute.Name : propertyInfo.Name.ToLowerInvariant();
+            _name = !string.IsNullOrEmpty(_attribute.Name) ? _attribute.Name : propertyInfo.Name.ToLower();
         }
 
         public string Name

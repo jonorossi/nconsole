@@ -62,8 +62,8 @@ namespace NConsole.Demo
         [CommandLineArgument("help", Exclusive = true, Description = "Display this help text")]
         public bool ShowHelp { get; set; }
 
-        //            Console.WriteLine("  /nologo\t\tSuppress version and copyright message");
-        //            Console.WriteLine("  /version\t\tDisplay software and configuration versions");
-        //            Console.WriteLine("  /target:<targets>\t\tSpecify targets to run (Short form: /t)");
+//        Console.WriteLine("  /nologo\t\tSuppress version and copyright message");
+//        Console.WriteLine("  /version\t\tDisplay software and configuration versions");
+//        Console.WriteLine("  /target:<targets>\t\tSpecify targets to run (Short form: /t)");
     }
 }
