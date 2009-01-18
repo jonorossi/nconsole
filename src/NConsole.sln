@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NConsole", "NConsole\NConsole.csproj", "{916D62CF-FE60-42F0-A7E6-B9DCB3F99FB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NConsole.Tests", "NConsole.Tests\NConsole.Tests.csproj", "{75046701-0312-4300-BB56-5759A11EA28B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NConsole.Demo", "NConsole.Demo\NConsole.Demo.csproj", "{A4C12DA8-C43D-4E7B-9CA2-A9BE42A9498B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{916D62CF-FE60-42F0-A7E6-B9DCB3F99FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{916D62CF-FE60-42F0-A7E6-B9DCB3F99FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{916D62CF-FE60-42F0-A7E6-B9DCB3F99FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{916D62CF-FE60-42F0-A7E6-B9DCB3F99FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75046701-0312-4300-BB56-5759A11EA28B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75046701-0312-4300-BB56-5759A11EA28B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75046701-0312-4300-BB56-5759A11EA28B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75046701-0312-4300-BB56-5759A11EA28B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C12DA8-C43D-4E7B-9CA2-A9BE42A9498B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C12DA8-C43D-4E7B-9CA2-A9BE42A9498B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C12DA8-C43D-4E7B-9CA2-A9BE42A9498B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C12DA8-C43D-4E7B-9CA2-A9BE42A9498B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
