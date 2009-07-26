@@ -9,8 +9,10 @@ namespace NConsole
     /// <summary>
     /// Provides parsing of command line arguments.
     /// </summary>
-    /// <typeparam name="TOptions">The options class that provides metadata about the allowed arguments. The
-    ///   <see cref="CommandLineParser{TOptions}" /> will return an instance of this type when parsing.</typeparam>
+    /// <typeparam name="TOptions">
+    ///   The options class that provides metadata about the allowed arguments. The
+    ///   <see cref="CommandLineParser{TOptions}" /> will return an instance of this type when parsing.
+    /// </typeparam>
     public class CommandLineParser<TOptions> where TOptions : class, new()
     {
         private readonly CommandLineArgumentCollection _arguments = new CommandLineArgumentCollection();
@@ -240,6 +242,7 @@ namespace NConsole
                 // Remove starting and trailing double quotes if they are there
                 if (value.StartsWith("\"") && value.EndsWith("\""))
                 {
+                    //TODO: This needs to support escaped quotes within the string
                     return value.Substring(1, value.Length - 2);
                 }
                 return value;
