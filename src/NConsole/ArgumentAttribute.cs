@@ -13,7 +13,7 @@ namespace NConsole
 
         public ArgumentAttribute(string name)
         {
-            if (string.IsNullOrEmpty(_name))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new CommandLineArgumentException("Command line arguments must have a name. Use the default " +
                     "constructor if the name should match the property name.");

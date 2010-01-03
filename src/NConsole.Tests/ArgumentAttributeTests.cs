@@ -1,4 +1,3 @@
-using System;
 using NConsole.Tests.Utils;
 using NUnit.Framework;
 
@@ -13,7 +12,7 @@ namespace NConsole.Tests
             // Arrange
 
             // Act
-            Exception ex = Record.Exception(() => new ArgumentAttribute(""));
+            var ex = Record.Exception(() => new ArgumentAttribute(""));
 
             // Assert
             Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);

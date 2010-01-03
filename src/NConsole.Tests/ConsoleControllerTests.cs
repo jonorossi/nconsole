@@ -19,6 +19,7 @@ namespace NConsole.Tests
             Assert.AreEqual(0, exitCode);
         }
 
+        //TODO; This test is ugly and should use a mocking framework
         [Test]
         public void ExecutedCommandByName()
         {
@@ -38,8 +39,6 @@ namespace NConsole.Tests
             Assert.AreEqual(1, count);
             Assert.AreEqual(0, exitCode);
         }
-
-
 
         private class RelayCommandFactory : ICommandFactory
         {
