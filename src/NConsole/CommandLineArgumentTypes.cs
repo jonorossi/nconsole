@@ -20,14 +20,14 @@ namespace NConsole
         // The required properties of the arguments should only be checked if the program isn't being run
         // with an exclusive argument
 
-        // [CommandLineArgument("server", Required = true)]
-        // [CommandLineArgument("help", Exclusive = true)]
+        // [Argument("server", Required = true)]
+        // [Argument("help", Exclusive = true)]
 
         // Requried for collections should mean at least one item
-        // [CommandLineArgument("files", Required = true)]
-        // [CommandLineArgument("files", Required = true, Exclusive = true)]
-        // [CommandLineArgument("files", AllowDuplicates = false)]
-        // [CommandLineArgument("files", UniqueValues = true)]
+        // [Argument("files", Required = true)]
+        // [Argument("files", Required = true, Exclusive = true)]
+        // [Argument("files", AllowDuplicates = false)]
+        // [Argument("files", UniqueValues = true)]
 
         //  /collarg:val1,val2,val3
         //  /collarg:val1 /colarg:val2 /colarg:val3

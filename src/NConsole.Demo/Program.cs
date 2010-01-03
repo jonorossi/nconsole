@@ -1,65 +1,65 @@
-﻿using System;
-
-namespace NConsole.Demo
+﻿namespace NConsole.Demo
 {
     class Program
     {
         static int Main(string[] args)
         {
-            // Parse the command line arguments
-            CommandLineParser<CommandLineOptions> parser = new CommandLineParser<CommandLineOptions>();
-            CommandLineOptions options;
-            try
-            {
-                options = parser.ParseArguments(args);
-            }
-            catch (CommandLineArgumentException claex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ERROR: " + claex.Message);
-                Console.ResetColor();
+            return new ConsoleController().Execute(args);
 
-                Console.WriteLine();
-                Console.WriteLine(parser.Usage);
-
-                return 1;
-            }
-
-            if (options.ShowHelp)
-            {
-                Console.WriteLine(parser.Usage);
-                return 0;
-            }
-
-            if (options.Mode == CommandLineOptions.AppMode.All)
-            {
-                // ... Normal application operation ...
-            }
-
-            return 0;
+//            // Parse the command line arguments
+//            CommandLineParser<AppCommand> parser = new CommandLineParser<AppCommand>();
+//            AppCommand options;
+//            try
+//            {
+//                options = parser.ParseArguments(args);
+//            }
+//            catch (CommandLineArgumentException claex)
+//            {
+//                Console.ForegroundColor = ConsoleColor.Red;
+//                Console.WriteLine("ERROR: " + claex.Message);
+//                Console.ResetColor();
+//
+//                Console.WriteLine();
+//                Console.WriteLine(parser.Usage);
+//
+//                return 1;
+//            }
+//
+//            if (options.ShowHelp)
+//            {
+//                Console.WriteLine(parser.Usage);
+//                return 0;
+//            }
+//
+//            if (options.Mode == AppCommand.AppMode.All)
+//            {
+//                // ... Normal application operation ...
+//            }
+//
+//            return 0;
         }
     }
 
-    internal class CommandLineOptions
+    internal class AppCommand
     {
         internal enum AppMode { All, Mode1, Mode2 }
 
-        [CommandLineArgument(Required = true, Description = "Select the function for the program to perform")]
+        [Argument(Mandatory = true, Description = "Select the function for the program to perform")]
         public AppMode Mode { get; set; }
 
-        [CommandLineArgument(Description = "The server to connect to")]
+        [Argument(Description = "The server to connect to")]
         public string Server { get; set; }
 
-        [CommandLineArgument("db", Description = "The database to use")]
+        [Argument("db", Description = "The database to use")]
         public string Database { get; set; }
 
-        [CommandLineArgument(Description = "The total amount of time to watch for the operations to complete")]
+        [Argument(Description = "The total amount of time to watch for the operations to complete")]
         public int? Timeout { get; set; }
 
-        [CommandLineArgument(Description = "The database objects to include in the functions")]
+        [Argument(Description = "The database objects to include in the functions")]
         public string[] DbObjects { get; set; }
 
-        [CommandLineArgument("help", Exclusive = true, Description = "Display this help text")]
+        [Argument("help", Exclusive = true, Description = "Display this help text")]
         public bool ShowHelp { get; set; }
 
 //        Console.WriteLine("  /nologo\t\tSuppress version and copyright message");

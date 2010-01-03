@@ -8,45 +8,69 @@ namespace NConsole.Tests
         [Test]
         public void NameIndexerReturnsCorrectArgument()
         {
-            CommandLineArgument argument = new CommandLineArgument(new CommandLineArgumentAttribute("help"), null);
+            // Arrange
+            Argument argument = new Argument(new ArgumentAttribute("help"), null);
             CommandLineArgumentCollection args = new CommandLineArgumentCollection { argument };
 
-            Assert.AreEqual(argument, args["help"]);
+            // Act
+            Argument actual = args["help"];
+
+            // Assert
+            Assert.AreEqual(argument, actual);
         }
 
         [Test]
         public void NameIndexerReturnsNullIfCasingOfArgumentIsNotExact()
         {
-            CommandLineArgument argument = new CommandLineArgument(new CommandLineArgumentAttribute("help"), null);
+            // Arrange
+            Argument argument = new Argument(new ArgumentAttribute("help"), null);
             CommandLineArgumentCollection args = new CommandLineArgumentCollection { argument };
 
-            Assert.IsNull(args["Help"]);
+            // Act
+            Argument actual = args["Help"];
+
+            // Assert
+            Assert.IsNull(actual);
         }
 
         [Test]
         public void NameIndexerReturnsNullIfArgumentIsNotInCollection()
         {
+            // Arrange
             CommandLineArgumentCollection args = new CommandLineArgumentCollection();
 
-            Assert.IsNull(args["nonExistantArg"]);
+            // Act
+            Argument actual = args["nonExistantArg"];
+
+            // Assert
+            Assert.IsNull(actual);
         }
 
         [Test]
-        public void ContainsReturnsTrueIfArgumentIsInCollection()
+        public void ContainsReturnsTrueIfArgumentIsInCollectionUsingArgumentName()
         {
-            CommandLineArgumentCollection args = new CommandLineArgumentCollection();
+            // Arrange
+            Argument argument = new Argument(new ArgumentAttribute("help"), null);
+            CommandLineArgumentCollection args = new CommandLineArgumentCollection { argument };
 
-            args.Add(new CommandLineArgument(new CommandLineArgumentAttribute("help"), null));
+            // Act
+            bool exists = args.Contains("help");
 
-            Assert.IsTrue(args.Contains("help"));
+            // Assert
+            Assert.IsTrue(exists);
         }
 
         [Test]
         public void ContainsReturnsFalseIfArgumentIsNotInCollection()
         {
+            // Arrange
             CommandLineArgumentCollection args = new CommandLineArgumentCollection();
 
-            Assert.IsFalse(args.Contains("nonExistantArg"));
+            // Act
+            bool exists = args.Contains("nonExistantArg");
+
+            // Assert
+            Assert.IsFalse(exists);
         }
     }
 }

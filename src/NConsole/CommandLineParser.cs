@@ -27,11 +27,11 @@ namespace NConsole
             {
                 if (propertyInfo.CanWrite/* || typeof(ICollection).IsAssignableFrom(propertyInfo.PropertyType)*/)
                 {
-                    // Attempt to build an argument from a CommandLineArgumentAttribute
-                    object[] attributes = propertyInfo.GetCustomAttributes(typeof(CommandLineArgumentAttribute), false);
+                    // Attempt to build an argument from a ArgumentAttribute
+                    object[] attributes = propertyInfo.GetCustomAttributes(typeof(ArgumentAttribute), false);
                     if (attributes.Length == 1)
                     {
-                        _arguments.Add(new CommandLineArgument((CommandLineArgumentAttribute)attributes[0], propertyInfo));
+                        _arguments.Add(new Argument((ArgumentAttribute)attributes[0], propertyInfo));
                     }
                 }
             }
@@ -51,7 +51,7 @@ namespace NConsole
             }
 
             // If an exclusive argument is found it is stored so that only this argument needs to be bound
-            CommandLineArgument exclusiveArgument = null;
+            Argument exclusiveArgument = null;
 
             // Parse each command line argument
             foreach (string arg in args)
@@ -80,7 +80,7 @@ namespace NConsole
                 string optionName = arg.Substring(1, endIndex == -1 ? arg.Length - 1 : endIndex - 1);
 
                 // Attempt to get the argument
-                CommandLineArgument argument = _arguments[optionName];
+                Argument argument = _arguments[optionName];
                 if (argument == null)
                 {
                     throw new CommandLineArgumentException(string.Format("Unknown argument '{0}'.", arg));
@@ -131,7 +131,7 @@ namespace NConsole
             }
             else
             {
-                foreach (CommandLineArgument argument in _arguments)
+                foreach (Argument argument in _arguments)
                 {
                     argument.Bind(options);
                 }
@@ -157,7 +157,7 @@ namespace NConsole
                 helpText.AppendFormat("Usage: {0}", Path.GetFileNameWithoutExtension(assembly.CodeBase));
 
                 // Required arguments in the header
-                foreach (CommandLineArgument argument in _arguments)
+                foreach (Argument argument in _arguments)
                 {
                     if (argument.IsRequired)
                     {
@@ -170,7 +170,7 @@ namespace NConsole
 
                 // Output each option
                 helpText.AppendLine("Options:");
-                foreach (CommandLineArgument argument in _arguments)
+                foreach (Argument argument in _arguments)
                 {
                     string optionUsage = "  /" + argument.Name;
 

@@ -2,18 +2,18 @@ using System.Collections.Generic;
 
 namespace NConsole
 {
-    public class CommandLineArgumentCollection : List<CommandLineArgument>
+    public class CommandLineArgumentCollection : List<Argument>
     {
         /// <summary>
         /// Gets the argument with the specified name.
         /// </summary>
         /// <param name="name">The name of the argument to get.</param>
         /// <returns></returns>
-        public CommandLineArgument this[string name]
+        public Argument this[string name]
         {
             get
             {
-                foreach (CommandLineArgument argument in this)
+                foreach (Argument argument in this)
                 {
                     if (argument.Name == name)
                     {
@@ -26,7 +26,7 @@ namespace NConsole
 
         public bool Contains(string name)
         {
-            foreach (CommandLineArgument argument in this)
+            foreach (Argument argument in this)
             {
                 if (argument.Name == name)
                 {

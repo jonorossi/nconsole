@@ -11,78 +11,108 @@ namespace NConsole.Tests
         [Test]
         public void CanParseAnEmptyCommandLine()
         {
-            CommandLineParser<Options_SingleBoolArg> parser = new CommandLineParser<Options_SingleBoolArg>();
+            // Arrange
+            var parser = new CommandLineParser<Options_SingleBoolArg>();
+
+            // Act
             Options_SingleBoolArg options = parser.ParseArguments(new string[0]);
 
-            Assert.IsNotNull(options);
+            // Assert
             Assert.IsFalse(options.Help);
         }
 
         [Test]
         public void CanParseNullArguments()
         {
-            CommandLineParser<Options_SingleBoolArg> parser = new CommandLineParser<Options_SingleBoolArg>();
-            ArgumentNullException anex = AssertEx.Throws<ArgumentNullException>(() =>
-                parser.ParseArguments(null)
-            );
+            // Arrange
+            var parser = new CommandLineParser<Options_SingleBoolArg>();
 
-            Assert.AreEqual("args", anex.ParamName);
-            Assert.AreEqual("Command line arguments are null.\r\nParameter name: args", anex.Message);
+            // Act
+            var ex = Record.Exception<ArgumentNullException>(() => parser.ParseArguments(null));
+
+            // Assert
+            Assert.IsInstanceOf(typeof(ArgumentNullException), ex);
+            Assert.AreEqual("args", ex.ParamName);
+            Assert.AreEqual("Command line arguments are null." + Environment.NewLine + "Parameter name: args", ex.Message);
         }
 
         [Test]
         public void CanParseOneEmptyArgument()
         {
-            CommandLineParser<Options_SingleBoolArg> parser = new CommandLineParser<Options_SingleBoolArg>();
+            // Arrange
+            var parser = new CommandLineParser<Options_SingleBoolArg>();
+
+            // Act
             Options_SingleBoolArg options = parser.ParseArguments(new[] { "" });
 
+            // Assert
             Assert.IsFalse(options.Help);
         }
 
         [Test]
         public void CanParseSingleBoolArgument()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_SingleBoolArg>();
+
+            // Act
             var options = parser.ParseArguments(new[] { "/help" });
 
+            // Assert
             Assert.IsTrue(options.Help);
         }
 
         [Test]
         public void CanParseRenamedArgument()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_RenamedArg>();
+
+            // Act
             var options = parser.ParseArguments(new[] { "/help" });
 
+            // Assert
             Assert.IsTrue(options.ShowHelp);
         }
 
         [Test]
         public void CanParseArgumentThatWasRenamedWithAttribute()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_RenamedArg>();
 
-            AssertEx.Throws<CommandLineArgumentException>("Unknown argument '/showhelp'.", () =>
-                parser.ParseArguments(new[] { "/showhelp" })
-            );
+            // Act
+            Exception ex = Record.Exception(() => parser.ParseArguments(new[] { "/showhelp" }));
+
+            // Assert
+            Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);
+            Assert.AreEqual("Unknown argument '/showhelp'.", ex.Message);
         }
 
         [Test]
         public void ThrowsOnUnknownArgument()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_SingleBoolArg>();
 
-            AssertEx.Throws<CommandLineArgumentException>("Unknown argument '/nonExistantArg'.", () =>
-                parser.ParseArguments(new[] { "/nonExistantArg" })
-            );
+            // Act
+            Exception ex = Record.Exception(() => parser.ParseArguments(new[] { "/nonExistantArg" }));
+
+            // Asseert
+            Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);
+            Assert.AreEqual("Unknown argument '/nonExistantArg'.", ex.Message);
         }
 
         [Test]
         public void ParseTwoDifferentArguments()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_TwoBoolArgs>();
+
+            // Act
             var options = parser.ParseArguments(new[] { "/argument1", "/argument2" });
 
+            // Assert
             Assert.IsTrue(options.Argument1);
             Assert.IsTrue(options.Argument2);
         }
@@ -90,40 +120,54 @@ namespace NConsole.Tests
         [Test]
         public void HandlesPropertiesThatAreAttributedWithNonArgumentAttributes()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_HasPropertyWithGeneratedCodeAttribute>();
+
+            // Act
             var options = parser.ParseArguments(new string[0]);
 
+            // Assert
             Assert.IsNotNull(options);
         }
 
         [Test]
         public void ThrowsWhenExclusiveArgumentUsedWithAnotherArgument()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_HasExclusiveHelp>();
 
-            AssertEx.Throws<CommandLineArgumentException>(
-                "The '/help' argument is exclusive and cannot be used with any other argument.",
-                () => parser.ParseArguments(new[] { "/help", "/run" })
-            );
+            // Act
+            Exception ex = Record.Exception(() => parser.ParseArguments(new[] { "/help", "/run" }));
+
+            // Assert
+            Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);
+            Assert.AreEqual("The '/help' argument is exclusive and cannot be used with any other argument.", ex.Message);
         }
 
         [Test]
         public void ThrowsWhenExclusiveArgumentSpecifiedLastAndUsedWithAnotherArgument()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_HasExclusiveHelp>();
 
-            AssertEx.Throws<CommandLineArgumentException>(
-                "The '/help' argument is exclusive and cannot be used with any other argument.",
-                () => parser.ParseArguments(new[] { "/run", "/help" })
-            );
+            // Act
+            Exception ex = Record.Exception(() => parser.ParseArguments(new[] { "/run", "/help" }));
+
+            // Assert
+            Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);
+            Assert.AreEqual("The '/help' argument is exclusive and cannot be used with any other argument.", ex.Message);
         }
 
         [Test]
         public void IgnoresRequiredArgumentsWhenExclusiveArgumentSpecified()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_HasExclusiveHelpAndRequiredMode>();
+
+            // Act
             var options = parser.ParseArguments(new[] { "/help" });
 
+            // Assert
             Assert.IsTrue(options.Help);
             Assert.IsNull(options.Run);
         }
@@ -131,18 +175,26 @@ namespace NConsole.Tests
         [Test]
         public void ParsesDoubleQuotedStringValues()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_WithStringArg>();
+
+            // Act
             var options = parser.ParseArguments(new[] { "/arg:\"First Second Third\"" });
 
+            // Assert
             Assert.AreEqual("First Second Third", options.Argument);
         }
 
         [Test]
         public void ParsesDoubleQuotedStringValuesInArray()
         {
+            // Arrange
             var parser = new CommandLineParser<Options_WithStringArg>();
+
+            // Act
             var options = parser.ParseArguments(new[] { "/array:\"First Second Third\",NextValue" });
 
+            // Assert
             Assert.AreEqual(2, options.ArrayArgument.Length);
             Assert.AreEqual("First Second Third", options.ArrayArgument[0]);
             Assert.AreEqual("NextValue", options.ArrayArgument[1]);
@@ -152,22 +204,22 @@ namespace NConsole.Tests
 
         private class Options_SingleBoolArg
         {
-            [CommandLineArgument]
+            [Argument]
             public bool Help { get; set; }
         }
 
         private class Options_RenamedArg
         {
-            [CommandLineArgument("help")]
+            [Argument("help")]
             public bool ShowHelp { get; set; }
         }
 
         private class Options_TwoBoolArgs
         {
-            [CommandLineArgument]
+            [Argument]
             public bool Argument1 { get; set; }
 
-            [CommandLineArgument]
+            [Argument]
             public bool Argument2 { get; set; }
         }
 
@@ -179,28 +231,28 @@ namespace NConsole.Tests
 
         private class Options_HasExclusiveHelp
         {
-            [CommandLineArgument("help", Exclusive = true)]
+            [Argument("help", Exclusive = true)]
             public bool Help { get; set; }
 
-            [CommandLineArgument("run")]
+            [Argument("run")]
             public bool Run { get; set; }
         }
 
         private class Options_HasExclusiveHelpAndRequiredMode
         {
-            [CommandLineArgument("help", Exclusive = true)]
+            [Argument("help", Exclusive = true)]
             public bool Help { get; set; }
 
-            [CommandLineArgument("mode", Required = true)]
+            [Argument("mode", Mandatory = true)]
             public string Run { get; set; }
         }
 
         private class Options_WithStringArg
         {
-            [CommandLineArgument("arg")]
+            [Argument("arg")]
             public string Argument { get; set; }
 
-            [CommandLineArgument("array")]
+            [Argument("array")]
             public string[] ArrayArgument { get; set; }
         }
 

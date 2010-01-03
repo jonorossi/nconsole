@@ -4,7 +4,9 @@
 
 <Unreleased>
 ============
-- n/a
+- CommandLineArgumentAttribute was renamed to ArgumentAttribute
+- CommandLineArgument was renamed to Argument
+- ArgumentAttribute.Required was renamed to Mandatory
 
 0.1.0 (2008-12-03)
 ============================
