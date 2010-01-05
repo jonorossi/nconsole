@@ -72,30 +72,7 @@
 //            int returnCode = controller.Execute(args);
 //        }
 
-//        public int Main_DesignForLs(string[] args)
-//        {
-//            args = new[] { "ls", "-l", "-h", "-S" };
-//
-//            var controller = new ConsoleController { Mode = Mode.Posix, DefaultCommand = typeof(LsCommand) };
-//            return controller.Execute(args);
-//        }
 
-//        public class LsCommand : ICommand
-//        {
-//            public void Execute(LsOptions options)
-//            {
-//            }
-//
-//            public class LsOptions
-//            {
-//                [Option(ShortName = "l")]
-//                public bool LongListingFormat { get; set; }
-//                [Option(ShortName = "h", LongName = "human-readable")]
-//                public bool HumanReadableSizes { get; set; }
-//                [Option(ShortName = "S")]
-//                public bool SortByFileSize { get; set; }
-//            }
-//        }
 //    }
 
 //    public class WindsorCommandFactory : ICommandFactory

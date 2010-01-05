@@ -32,7 +32,7 @@ namespace NConsole
             _propertyInfo = propertyInfo;
 
             // Use the name specifed on the attribute, if null use the property name
-            _name = !string.IsNullOrEmpty(_attribute.Name) ? _attribute.Name : propertyInfo.Name.ToLower();
+//            _name = !string.IsNullOrEmpty(_attribute.Name) ? _attribute.Name : propertyInfo.Name.ToLower();
         }
 
         public string Name
@@ -45,20 +45,20 @@ namespace NConsole
             get { return _propertyInfo.PropertyType; }
         }
 
-        public bool IsRequired
-        {
-            get { return _attribute.Mandatory; }
-        }
-
-        public bool IsExclusive
-        {
-            get { return _attribute.Exclusive; }
-        }
-
-        public string Description
-        {
-            get { return _attribute.Description; }
-        }
+//        public bool IsRequired
+//        {
+//            get { return _attribute.Mandatory; }
+//        }
+//
+//        public bool IsExclusive
+//        {
+//            get { return _attribute.Exclusive; }
+//        }
+//
+//        public string Description
+//        {
+//            get { return _attribute.Description; }
+//        }
 
         public bool AllowMultiple
         {
@@ -95,10 +95,10 @@ namespace NConsole
         public void Bind(object options)
         {
             // If this argument hasn't been specified and it is required
-            if (!_seenValue && IsRequired)
-            {
-                throw new CommandLineArgumentException(string.Format("Argument '/{0}' must appear at least once.", Name));
-            }
+//            if (!_seenValue && IsRequired)
+//            {
+//                throw new CommandLineArgumentException(string.Format("Argument '/{0}' must appear at least once.", Name));
+//            }
 
             _propertyInfo.SetValue(options, _argumentValue, null);
         }

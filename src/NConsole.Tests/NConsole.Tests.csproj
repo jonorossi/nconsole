@@ -37,29 +37,33 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NUnit\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\rhino-mocks\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArgumentAttributeTests.cs" />
+    <Compile Include="CommandClasses\LsAppCommand.cs" />
+    <Compile Include="_Stuff\ArgumentAttributeTests.cs" />
+    <Compile Include="CommandClasses\DisposableCommand.cs" />
+    <Compile Include="CommandClasses\NoOpCommand.cs" />
+    <Compile Include="ConsoleControllerSingleCommandAppTests.cs" />
     <Compile Include="ConsoleControllerTests.cs" />
-    <Compile Include="CommandLineArgumentCollectionTests.cs" />
-    <Compile Include="ArgumentTests.cs" />
-    <Compile Include="CommandLineParserDataTypeTests.cs" />
-    <Compile Include="CommandLineParserOutputUsageTests.cs" />
-    <Compile Include="CommandLineParserTests.cs" />
-    <Compile Include="CommandLineParserValueParsingTests.cs" />
-    <Compile Include="Internal\CommandDescriptorTests.cs" />
-    <Compile Include="Internal\DefaultCommandFactoryTests.cs" />
-    <Compile Include="NewApi.cs" />
+    <Compile Include="_Stuff\CommandLineArgumentCollectionTests.cs" />
+    <Compile Include="_Stuff\ArgumentTests.cs" />
+    <Compile Include="_Stuff\CommandLineParserDataTypeTests.cs" />
+    <Compile Include="_Stuff\CommandLineParserOutputUsageTests.cs" />
+    <Compile Include="_Stuff\CommandLineParserTests.cs" />
+    <Compile Include="_Stuff\CommandLineParserValueParsingTests.cs" />
+    <Compile Include="_Stuff\Internal\CommandDescriptorTests.cs" />
+    <Compile Include="DefaultCommandFactoryTests.cs" />
+    <Compile Include="_Stuff\NewApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\AssertEx.cs" />
+    <Compile Include="_Stuff\AssertEx.cs" />
     <Compile Include="Utils\Record.cs" />
   </ItemGroup>
   <ItemGroup>

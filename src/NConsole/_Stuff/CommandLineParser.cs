@@ -87,17 +87,17 @@ namespace NConsole
                 }
 
                 // If this argument is exclusive and multiple arguments have been passed on the command line then throw an exception
-                if (argument.IsExclusive && args.Length > 1)
-                {
-                    throw new CommandLineArgumentException(string.Format("The '/{0}' argument is exclusive and cannot " +
-                        "be used with any other argument.", argument.Name));
-                }
+//                if (argument.IsExclusive && args.Length > 1)
+//                {
+//                    throw new CommandLineArgumentException(string.Format("The '/{0}' argument is exclusive and cannot " +
+//                        "be used with any other argument.", argument.Name));
+//                }
 
                 // Store the exclusive argument for later use
-                if (argument.IsExclusive)
-                {
-                    exclusiveArgument = argument;
-                }
+//                if (argument.IsExclusive)
+//                {
+//                    exclusiveArgument = argument;
+//                }
 
                 // Determine the value of the argument
                 object optionValue;
@@ -159,10 +159,10 @@ namespace NConsole
                 // Required arguments in the header
                 foreach (Argument argument in _arguments)
                 {
-                    if (argument.IsRequired)
-                    {
-                        helpText.AppendFormat(" /{0}{1}", argument.Name, GetOptionUsage(argument.ValueType));
-                    }
+//                    if (argument.IsRequired)
+//                    {
+//                        helpText.AppendFormat(" /{0}{1}", argument.Name, GetOptionUsage(argument.ValueType));
+//                    }
                 }
 
                 // End of usage header
@@ -185,11 +185,11 @@ namespace NConsole
                     optionUsage += GetOptionUsage(valueType);
 
                     // Append description
-                    if (!string.IsNullOrEmpty(argument.Description))
-                    {
-                        // Pad the argument definition so that the descriptions line up
-                        optionUsage = string.Format("{0,-28}  {1}", optionUsage, argument.Description);
-                    }
+//                    if (!string.IsNullOrEmpty(argument.Description))
+//                    {
+//                        // Pad the argument definition so that the descriptions line up
+//                        optionUsage = string.Format("{0,-28}  {1}", optionUsage, argument.Description);
+//                    }
 
                     helpText.AppendLine(optionUsage);
                 }

@@ -2,22 +2,22 @@ using NUnit.Framework;
 
 namespace NConsole.Tests
 {
-    [TestFixture]
+    [TestFixture, Ignore]
     public class CommandLineParserDataTypeTests
     {
-        [Test]
-        public void StringArguments()
-        {
-            // Arrange
-            var parser = new CommandLineParser<Options_WithStringArguments>();
-
-            // Act
-            var options = parser.ParseArguments(new[] { "/server:box", "/db:dev" });
-
-            // Assert
-            Assert.AreEqual("box", options.Server);
-            Assert.AreEqual("dev", options.Database);
-        }
+//        [Test]
+//        public void StringArguments()
+//        {
+//            // Arrange
+//            var parser = new CommandLineParser<Options_WithStringArguments>();
+//
+//            // Act
+//            var options = parser.ParseArguments(new[] { "/server:box", "/db:dev" });
+//
+//            // Assert
+//            Assert.AreEqual("box", options.Server);
+//            Assert.AreEqual("dev", options.Database);
+//        }
 
         [Test]
         public void BooleanArguments()
@@ -77,13 +77,13 @@ namespace NConsole.Tests
 
         #region Option Classes
 
-        private class Options_WithStringArguments
-        {
-            [Argument]
-            public string Server { get; set; }
-            [Argument("db")]
-            public string Database { get; set; }
-        }
+//        private class Options_WithStringArguments
+//        {
+//            [Argument]
+//            public string Server { get; set; }
+//            [Argument("db")]
+//            public string Database { get; set; }
+//        }
 
         private class Options_WithBooleanArguments
         {

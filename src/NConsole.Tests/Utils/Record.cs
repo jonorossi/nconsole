@@ -1,12 +1,12 @@
 using System;
-using System.Diagnostics;
+using NUnit.Framework;
 
 namespace NConsole.Tests.Utils
 {
     /// <summary>
     /// Records thrown exceptions thrown from invoked delegates to support AAA-style unit testing.
     /// </summary>
-    [DebuggerNonUserCode]
+    [System.Diagnostics.DebuggerNonUserCode]
     public static class Record
     {
         /// <summary>
@@ -25,6 +25,7 @@ namespace NConsole.Tests.Utils
             {
                 return ex;
             }
+            Assert.Fail("Delegate did not throw an " + typeof(T).Name + ".");
             return null;
         }
 

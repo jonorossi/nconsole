@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace NConsole.Tests
 {
-    [TestFixture]
+    [TestFixture, Ignore]
     public class CommandLineParserValueParsingTests
     {
         [Test]

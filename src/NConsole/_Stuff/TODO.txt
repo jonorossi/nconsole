@@ -1,0 +1,39 @@
+﻿+==============+
+|     TODO     |
++==============+
+- Support starting args with '/' and '-'
+- Obsolete arguments
+- Value Data Types:
+  - ICollection<T>: /things:item1,item2,item3
+  - IDictionary<TKey,TValue>: /things:key1=val1,key2=val2
+  - FileInfo: /out:C:\...\file.ext
+  - DirectoryInfo: /dir:C:\...\
+  - Version: /outver:1.0.0.0
+- Look at storing the argument values in the commandlineparser and not in the arguments
+- Allow easy to add info header:
+    Microsoft (R) .NET Framework Strong Name Utility  Version 3.5.30729.1
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+- Add something to make catching and outputting exceptions in 1 line. E.g. ConsoleController or something.
+- Support adding this text to the end of the usage output:
+  /W{0|1|2|3|4}      Specify warning level 0-4 (default = 1)
+- If the options class implements IArgumentValidator { void Validate() } then call it.
+- ICustomArgumentParser { void Parse(string value) }
+
++==============+
+|     Done     |
++==============+
+- Value Data Types:
+  - String: /name:value
+  - Boolean: /flag /flag+ /flag-
+  - Numeric: /name:123 /name:1.3
+  - Enum: /mode:all
+  - Nullable arguments work. (e.g. int?)
+  - Arrays: /thing:item1 thing2
+
+
+/customer:Id=111,Name="John Smith",Email=jsmith@example.com
+
+/port:COM1 /baud:12000,1 /endpoint:10.0.0.1:12345
+/serial:COM1,12000,1 /endpoint:10.0.0.1:12345
+
+/in:COM1,12000 /out:COM2,12000
