@@ -10,5 +10,8 @@ namespace NConsole.Tests.CommandClasses
 
         [Argument(ShortName = "S")]
         public bool SortByFileSize { get; set; }
+
+        [Argument(ShortName = "I", LongName = "ignore")]
+        public string[] IgnorePatterns { get; set; }
     }
 }

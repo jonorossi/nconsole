@@ -47,11 +47,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandClasses\CloneCommand.cs" />
     <Compile Include="CommandClasses\LsAppCommand.cs" />
     <Compile Include="_Stuff\ArgumentAttributeTests.cs" />
     <Compile Include="CommandClasses\DisposableCommand.cs" />
     <Compile Include="CommandClasses\NoOpCommand.cs" />
-    <Compile Include="ConsoleControllerSingleCommandAppTests.cs" />
     <Compile Include="ConsoleControllerTests.cs" />
     <Compile Include="_Stuff\CommandLineArgumentCollectionTests.cs" />
     <Compile Include="_Stuff\ArgumentTests.cs" />
@@ -64,7 +64,6 @@
     <Compile Include="_Stuff\NewApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="_Stuff\AssertEx.cs" />
-    <Compile Include="Utils\Record.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NConsole\NConsole.csproj">

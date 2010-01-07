@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NConsole
@@ -41,51 +42,63 @@ namespace NConsole
         /// <returns>The exit code that should be used when the process terminates.</returns>
         public int Execute(string[] args)
         {
-            // If we don't have a default command then exit
-            if (DefaultCommand == null)
-            {
-                return 1;
-            }
-
             ICommand command = commandFactory.Create(DefaultCommand/*args[0]*/);
 
             Type commandType = DefaultCommand;
 
-            // Build up a list of arguments that will later be used for parsing
-            foreach (PropertyInfo propertyInfo in commandType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (string arg in args)
             {
-                if (propertyInfo.IsDefined(typeof(ArgumentAttribute), true))
+                int endOfName = arg.IndexOf('=');
+
+                string argName = endOfName >= 0 ? arg.Substring(0, endOfName) : arg;
+
+                // Build up a list of arguments that will later be used for parsing
+                PropertyInfo[] properties = commandType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                foreach (PropertyInfo propertyInfo in properties)
                 {
-                    var attribute = (ArgumentAttribute)Attribute.GetCustomAttribute(propertyInfo, typeof(ArgumentAttribute), true);
-
-                    //TODO: Build an ArgumentDescriptor collecting metadata from the property and ArgumentAttribute
-
-                    foreach (string arg in args)
+                    if (propertyInfo.IsDefined(typeof(ArgumentAttribute), true))
                     {
-                        if (arg == "-" + attribute.ShortName ||
-                            arg == "--" + attribute.LongName)
+                        var attribute = (ArgumentAttribute)Attribute.GetCustomAttribute(
+                            propertyInfo, typeof(ArgumentAttribute), true);
+
+                        //TODO: Build an ArgumentDescriptor collecting metadata from the property and ArgumentAttribute
+
+                        if (argName == "-" + attribute.ShortName ||
+                            argName == "--" + attribute.LongName)
                         {
-                            propertyInfo.SetValue(command, true, null);
+                            if (propertyInfo.PropertyType == typeof(bool))
+                            {
+                                propertyInfo.SetValue(command, true, null);
+                            }
+                            else if (propertyInfo.PropertyType == typeof(string[]))
+                            {
+                                List<string> values = new List<string>();
+
+                                object currentValue = propertyInfo.GetValue(command, null);
+                                if (currentValue != null)
+                                {
+                                    values.AddRange(((string[])currentValue));
+                                }
+
+                                values.Add(arg.Substring(endOfName + 1));
+
+                                propertyInfo.SetValue(command, values.ToArray(), null);
+                            }
+                            else
+                            {
+                                throw new NotSupportedException("unsupported argument type " +
+                                    propertyInfo.PropertyType.FullName);
+                            }
+
+                            //if (propertyInfo.CanWrite/* || typeof(ICollection).IsAssignableFrom(propertyInfo.PropertyType)*/)
                         }
                     }
-
-//                    if (propertyInfo.CanWrite/* || typeof(ICollection).IsAssignableFrom(propertyInfo.PropertyType)*/)
-//                    {
-//                    }
                 }
             }
 
             command.Execute();
 
             return 0;
-
-            // With this:
-            //     clone --quiet http://example.com/app.git
-            // It will:
-            //     command = new CloneCommand();
-            //     command.Quiet = true;
-            //     command.Repository = "...";
-            //     command.Execute();
         }
     }
 }

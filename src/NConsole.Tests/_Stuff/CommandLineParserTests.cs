@@ -8,59 +8,59 @@ namespace NConsole.Tests
     [TestFixture, Ignore]
     public class CommandLineParserTests
     {
-        [Test]
-        public void CanParseAnEmptyCommandLine()
-        {
-            // Arrange
-            var parser = new CommandLineParser<Options_SingleBoolArg>();
-
-            // Act
-            Options_SingleBoolArg options = parser.ParseArguments(new string[0]);
-
-            // Assert
-            Assert.IsFalse(options.Help);
-        }
-
-        [Test]
-        public void CanParseNullArguments()
-        {
-            // Arrange
-            var parser = new CommandLineParser<Options_SingleBoolArg>();
-
-            // Act
-            var ex = Record.Exception<ArgumentNullException>(() => parser.ParseArguments(null));
-
-            // Assert
-            Assert.IsInstanceOf(typeof(ArgumentNullException), ex);
-            Assert.AreEqual("args", ex.ParamName);
-            Assert.AreEqual("Command line arguments are null." + Environment.NewLine + "Parameter name: args", ex.Message);
-        }
-
-        [Test]
-        public void CanParseOneEmptyArgument()
-        {
-            // Arrange
-            var parser = new CommandLineParser<Options_SingleBoolArg>();
-
-            // Act
-            Options_SingleBoolArg options = parser.ParseArguments(new[] { "" });
-
-            // Assert
-            Assert.IsFalse(options.Help);
-        }
-
-        [Test]
-        public void CanParseSingleBoolArgument()
-        {
-            // Arrange
-            var parser = new CommandLineParser<Options_SingleBoolArg>();
-
-            // Act
-            var options = parser.ParseArguments(new[] { "/help" });
-
-            // Assert
-            Assert.IsTrue(options.Help);
-        }
+//        [Test]
+//        public void CanParseAnEmptyCommandLine()
+//        {
+//            // Arrange
+//            var parser = new CommandLineParser<Options_SingleBoolArg>();
+//
+//            // Act
+//            Options_SingleBoolArg options = parser.ParseArguments(new string[0]);
+//
+//            // Assert
+//            Assert.IsFalse(options.Help);
+//        }
+//
+//        [Test]
+//        public void CanParseNullArguments()
+//        {
+//            // Arrange
+//            var parser = new CommandLineParser<Options_SingleBoolArg>();
+//
+//            // Act
+//            var ex = Record.Exception<ArgumentNullException>(() => parser.ParseArguments(null));
+//
+//            // Assert
+//            Assert.IsInstanceOf(typeof(ArgumentNullException), ex);
+//            Assert.AreEqual("args", ex.ParamName);
+//            Assert.AreEqual("Command line arguments are null." + Environment.NewLine + "Parameter name: args", ex.Message);
+//        }
+//
+//        [Test]
+//        public void CanParseOneEmptyArgument()
+//        {
+//            // Arrange
+//            var parser = new CommandLineParser<Options_SingleBoolArg>();
+//
+//            // Act
+//            Options_SingleBoolArg options = parser.ParseArguments(new[] { "" });
+//
+//            // Assert
+//            Assert.IsFalse(options.Help);
+//        }
+//
+//        [Test]
+//        public void CanParseSingleBoolArgument()
+//        {
+//            // Arrange
+//            var parser = new CommandLineParser<Options_SingleBoolArg>();
+//
+//            // Act
+//            var options = parser.ParseArguments(new[] { "/help" });
+//
+//            // Assert
+//            Assert.IsTrue(options.Help);
+//        }
 
 //        [Test]
 //        public void CanParseRenamedArgument()
@@ -89,46 +89,46 @@ namespace NConsole.Tests
 //            Assert.AreEqual("Unknown argument '/showhelp'.", ex.Message);
 //        }
 
-        [Test]
-        public void ThrowsOnUnknownArgument()
-        {
-            // Arrange
-            var parser = new CommandLineParser<Options_SingleBoolArg>();
-
-            // Act
-            Exception ex = Record.Exception(() => parser.ParseArguments(new[] { "/nonExistantArg" }));
-
-            // Asseert
-            Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);
-            Assert.AreEqual("Unknown argument '/nonExistantArg'.", ex.Message);
-        }
-
-        [Test]
-        public void ParseTwoDifferentArguments()
-        {
-            // Arrange
-            var parser = new CommandLineParser<Options_TwoBoolArgs>();
-
-            // Act
-            var options = parser.ParseArguments(new[] { "/argument1", "/argument2" });
-
-            // Assert
-            Assert.IsTrue(options.Argument1);
-            Assert.IsTrue(options.Argument2);
-        }
-
-        [Test]
-        public void HandlesPropertiesThatAreAttributedWithNonArgumentAttributes()
-        {
-            // Arrange
-            var parser = new CommandLineParser<Options_HasPropertyWithGeneratedCodeAttribute>();
-
-            // Act
-            var options = parser.ParseArguments(new string[0]);
-
-            // Assert
-            Assert.IsNotNull(options);
-        }
+//        [Test]
+//        public void ThrowsOnUnknownArgument()
+//        {
+//            // Arrange
+//            var parser = new CommandLineParser<Options_SingleBoolArg>();
+//
+//            // Act
+//            Exception ex = Record.Exception(() => parser.ParseArguments(new[] { "/nonExistantArg" }));
+//
+//            // Asseert
+//            Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);
+//            Assert.AreEqual("Unknown argument '/nonExistantArg'.", ex.Message);
+//        }
+//
+//        [Test]
+//        public void ParseTwoDifferentArguments()
+//        {
+//            // Arrange
+//            var parser = new CommandLineParser<Options_TwoBoolArgs>();
+//
+//            // Act
+//            var options = parser.ParseArguments(new[] { "/argument1", "/argument2" });
+//
+//            // Assert
+//            Assert.IsTrue(options.Argument1);
+//            Assert.IsTrue(options.Argument2);
+//        }
+//
+//        [Test]
+//        public void HandlesPropertiesThatAreAttributedWithNonArgumentAttributes()
+//        {
+//            // Arrange
+//            var parser = new CommandLineParser<Options_HasPropertyWithGeneratedCodeAttribute>();
+//
+//            // Act
+//            var options = parser.ParseArguments(new string[0]);
+//
+//            // Assert
+//            Assert.IsNotNull(options);
+//        }
 
 //        [Test]
 //        public void ThrowsWhenExclusiveArgumentUsedWithAnotherArgument()

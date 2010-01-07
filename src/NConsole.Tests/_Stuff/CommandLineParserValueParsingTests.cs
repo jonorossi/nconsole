@@ -61,18 +61,18 @@ namespace NConsole.Tests
             Mode2
         }
 
-        [Test]
-        public void ParseValueThrowsWithUnsupportedType()
-        {
-            // Arrange
-
-            // Act
-            Exception ex = Record.Exception(() => ParseValue<EventArgs>("SomehowAnEventArgs"));
-
-            // Assert
-            Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);
-            Assert.AreEqual("Unsupported argument type 'System.EventArgs' or value 'SomehowAnEventArgs'.", ex.Message);
-        }
+//        [Test]
+//        public void ParseValueThrowsWithUnsupportedType()
+//        {
+//            // Arrange
+//
+//            // Act
+//            Exception ex = Record.Exception(() => ParseValue<EventArgs>("SomehowAnEventArgs"));
+//
+//            // Assert
+//            Assert.IsInstanceOf(typeof(CommandLineArgumentException), ex);
+//            Assert.AreEqual("Unsupported argument type 'System.EventArgs' or value 'SomehowAnEventArgs'.", ex.Message);
+//        }
 
         private static T ParseValue<T>(string stringValue)
         {
