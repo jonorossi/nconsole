@@ -1,5 +1,5 @@
-namespace NConsole
-{
+//namespace NConsole
+//{
 //    [Flags]
 //    public enum CommandLineArgumentTypes
 //    {
@@ -47,4 +47,4 @@ namespace NConsole
 //        Exclusive/* = 0x08*/,
 //        MultipleUnique = Multiple | Unique,
 //    }
-}
+//}

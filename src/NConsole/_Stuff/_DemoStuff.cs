@@ -1,11 +1,26 @@
-﻿using System;
+//            SmartConsole.WriteLine("[color=red]hey[/color]");
+//            SmartConsole.WriteLine("[progressbar value=80 type=hf] 10KiB/s");
+//            SmartConsole.WriteLine("|50%Hello|25%Second Column|25%Third Column");
+//            SmartConsole.WriteLine("[row=50%|Hello|25%Second Column|25%Third Column");
 
-namespace NConsole.Demo
-{
-    class Program
-    {
-        static int Main(string[] args)
-        {
+//    public interface IConsole
+//    {
+//    }
+//
+//    public static class SmartConsole
+//    {
+//        private static IConsole console;
+//
+//        public static void _SetConsole(IConsole console)
+//        {
+//            SmartConsole.console = console;
+//        }
+//
+//        public static void WriteLine(string value)
+//        {
+//        }
+//    }
+
 //            // Parse the command line arguments
 //            CommandLineParser<AppCommand> parser = new CommandLineParser<AppCommand>();
 //            AppCommand options;
@@ -34,15 +49,12 @@ namespace NConsole.Demo
 //            if (options.Mode == AppCommand.AppMode.All)
 //            {
 //                // ... Normal application operation ...
-//            }
+//            })
 
-            return 0;
-        }
-    }
 
-    internal class AppCommand : ICommand
-    {
-        internal enum AppMode { All, Mode1, Mode2 }
+//    internal class AppCommand : ICommand
+//    {
+//        internal enum AppMode { All, Mode1, Mode2 }
 
 //        [Argument(Mandatory = true, Description = "Select the function for the program to perform")]
 //        public AppMode Mode { get; set; }
@@ -66,9 +78,8 @@ namespace NConsole.Demo
 //        Console.WriteLine("  /version\t\tDisplay software and configuration versions");
 //        Console.WriteLine("  /target:<targets>\t\tSpecify targets to run (Short form: /t)");
 
-        public void Execute()
-        {
-            throw new NotImplementedException();
-        }
-    }
-}
+//        public void Execute()
+//        {
+//            throw new NotImplementedException();
+//        }
+//    }

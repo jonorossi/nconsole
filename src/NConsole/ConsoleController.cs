@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NConsole.Internal;
 
 namespace NConsole
 {
@@ -8,8 +9,7 @@ namespace NConsole
 
     public class ConsoleController
     {
-        //private readonly List<CommandDescriptor> descriptors = new List<CommandDescriptor>();
-
+        private readonly ICommandRegistry commandRegistry;
         private readonly ICommandFactory commandFactory;
 
         /// <summary>
@@ -25,9 +25,15 @@ namespace NConsole
         /// </summary>
         /// <param name="commandFactory">A custom <see cref="ICommandFactory"/>.</param>
         public ConsoleController(ICommandFactory commandFactory)
+            : this(new CommandRegistry(), commandFactory)
+        {
+        }
+
+        private ConsoleController(ICommandRegistry commandRegistry, ICommandFactory commandFactory)
         {
             if (commandFactory == null) throw new ArgumentNullException("commandFactory");
 
+            this.commandRegistry = commandRegistry;
             this.commandFactory = commandFactory;
         }
 
@@ -35,8 +41,15 @@ namespace NConsole
 
         public Type DefaultCommand { get; set; }
 
+        public void Register(Type commandType)
+        {
+            if (commandType == null) throw new ArgumentNullException("commandType");
+
+            commandRegistry.Register(commandType);
+        }
+
         /// <summary>
-        /// Executes the appropriate command for the provided command line arguments.
+        /// Executes the appropriate command for the specified command line arguments.
         /// </summary>
         /// <param name="args">The Command line arguments.</param>
         /// <returns>The exit code that should be used when the process terminates.</returns>

@@ -102,7 +102,6 @@ namespace NConsole.Tests
             var command = MockRepository.GenerateStub<CloneCommand>();
             var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
             commandFactory.Stub(f => f.Create(typeof(CloneCommand))).Return(command);
-
             var controller = new ConsoleController(commandFactory);
 
             int exitCode = controller.Execute(new[] { "clone" });
@@ -110,13 +109,5 @@ namespace NConsole.Tests
             command.AssertWasCalled(c => c.Execute());
             Assert.AreEqual(0, exitCode);
         }
-
-        // With this:
-        //     clone --quiet http://example.com/app.git
-        // It will:
-        //     command = new CloneCommand();
-        //     command.Quiet = true;
-        //     command.Repository = "...";
-        //     command.Execute();
     }
 }

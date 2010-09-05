@@ -1,10 +1,10 @@
-using NUnit.Framework;
+//using NUnit.Framework;
 
-namespace NConsole.Tests
-{
-    [TestFixture, Ignore]
-    public class CommandLineArgumentCollectionTests
-    {
+//namespace NConsole.Tests
+//{
+//    [TestFixture, Ignore]
+//    public class CommandLineArgumentCollectionTests
+//    {
 //        [Test]
 //        public void NameIndexerReturnsCorrectArgument()
 //        {
@@ -72,5 +72,5 @@ namespace NConsole.Tests
 //            // Assert
 //            Assert.IsFalse(exists);
 //        }
-    }
-}
+//    }
+//}

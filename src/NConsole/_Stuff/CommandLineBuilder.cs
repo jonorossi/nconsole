@@ -1,6 +1,6 @@
-namespace NConsole
-{
-    public class CommandLineBuilder
-    {
-    }
-}
+//namespace NConsole
+//{
+//    public class CommandLineBuilder
+//    {
+//    }
+//}

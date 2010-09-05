@@ -1,11 +1,11 @@
-using NConsole.Tests.Utils;
-using NUnit.Framework;
+//using NConsole.Tests.Utils;
+//using NUnit.Framework;
 
-namespace NConsole.Tests
-{
-    [TestFixture, Ignore]
-    public class ArgumentAttributeTests
-    {
+//namespace NConsole.Tests
+//{
+//    [TestFixture, Ignore]
+//    public class ArgumentAttributeTests
+//    {
 //        [Test]
 //        public void ArgumentWithEmptyStringNameThrowsException()
 //        {
@@ -53,5 +53,5 @@ namespace NConsole.Tests
 //            Assert.IsTrue(attribute.Exclusive);
 //            Assert.AreEqual("Example description", attribute.Description);
 //        }
-    }
-}
+//    }
+//}

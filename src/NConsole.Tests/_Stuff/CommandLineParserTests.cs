@@ -1,13 +1,13 @@
-using System;
-using System.CodeDom.Compiler;
-using NConsole.Tests.Utils;
-using NUnit.Framework;
+//using System;
+//using System.CodeDom.Compiler;
+//using NConsole.Tests.Utils;
+//using NUnit.Framework;
 
-namespace NConsole.Tests
-{
-    [TestFixture, Ignore]
-    public class CommandLineParserTests
-    {
+//namespace NConsole.Tests
+//{
+//    [TestFixture, Ignore]
+//    public class CommandLineParserTests
+//    {
 //        [Test]
 //        public void CanParseAnEmptyCommandLine()
 //        {
@@ -200,13 +200,13 @@ namespace NConsole.Tests
 //            Assert.AreEqual("NextValue", options.ArrayArgument[1]);
 //        }
 
-        #region Option Classes
+        //#region Option Classes
 
-        private class Options_SingleBoolArg
-        {
-            [Argument]
-            public bool Help { get; set; }
-        }
+        //private class Options_SingleBoolArg
+        //{
+        //    [Argument]
+        //    public bool Help { get; set; }
+        //}
 
 //        private class Options_RenamedArg
 //        {
@@ -214,20 +214,20 @@ namespace NConsole.Tests
 //            public bool ShowHelp { get; set; }
 //        }
 
-        private class Options_TwoBoolArgs
-        {
-            [Argument]
-            public bool Argument1 { get; set; }
+        //private class Options_TwoBoolArgs
+        //{
+        //    [Argument]
+        //    public bool Argument1 { get; set; }
 
-            [Argument]
-            public bool Argument2 { get; set; }
-        }
+        //    [Argument]
+        //    public bool Argument2 { get; set; }
+        //}
 
-        private class Options_HasPropertyWithGeneratedCodeAttribute
-        {
-            [GeneratedCode("", "")]
-            public string Test { get; set; }
-        }
+        //private class Options_HasPropertyWithGeneratedCodeAttribute
+        //{
+        //    [GeneratedCode("", "")]
+        //    public string Test { get; set; }
+        //}
 
 //        private class Options_HasExclusiveHelp
 //        {
@@ -256,6 +256,6 @@ namespace NConsole.Tests
 //            public string[] ArrayArgument { get; set; }
 //        }
 
-        #endregion
-    }
-}
+//        #endregion
+//    }
+//}

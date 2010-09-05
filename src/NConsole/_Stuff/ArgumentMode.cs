@@ -1,9 +1,9 @@
-namespace NConsole
-{
-    public enum ArgumentMode
-    {
-        Undefined,
-        Posix,
-        Windows
-    }
-}
+//namespace NConsole
+//{
+//    public enum ArgumentMode
+//    {
+//        Undefined,
+//        Posix,
+//        Windows
+//    }
+//}

@@ -1,12 +1,12 @@
-using System;
-using NConsole.Tests.Utils;
-using NUnit.Framework;
+//using System;
+//using NConsole.Tests.Utils;
+//using NUnit.Framework;
 
-namespace NConsole.Tests
-{
-    [TestFixture, Ignore]
-    public class ArgumentTests
-    {
+//namespace NConsole.Tests
+//{
+//    [TestFixture, Ignore]
+//    public class ArgumentTests
+//    {
 //        [Test]
 //        public void WillBindStringArgument()
 //        {
@@ -54,13 +54,13 @@ namespace NConsole.Tests
 //            Assert.AreEqual("Argument '/arg' must appear at least once.", ex.Message);
 //        }
 
-        #region Option Classes
+//        #region Option Classes
 
-        private class Options_OneStringProperty
-        {
-            public string StringProperty { get; set; }
-        }
+//        private class Options_OneStringProperty
+//        {
+//            public string StringProperty { get; set; }
+//        }
 
-        #endregion
-    }
-}
+//        #endregion
+//    }
+//}
