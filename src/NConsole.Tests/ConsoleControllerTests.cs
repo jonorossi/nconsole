@@ -24,7 +24,9 @@ namespace NConsole.Tests
             var command = MockRepository.GenerateStub<LsAppCommand>();
             var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
             commandFactory.Stub(f => f.Create(typeof(LsAppCommand))).Return(command);
-            var controller = new ConsoleController(commandFactory) { DefaultCommand = typeof(LsAppCommand) };
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(LsAppCommand));
+            controller.SetDefaultCommand(typeof(LsAppCommand));
 
             int exitCode = controller.Execute(new string[] { });
 
@@ -41,7 +43,9 @@ namespace NConsole.Tests
             var command = MockRepository.GenerateStub<LsAppCommand>();
             var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
             commandFactory.Stub(f => f.Create(typeof(LsAppCommand))).Return(command);
-            var controller = new ConsoleController(commandFactory) { DefaultCommand = typeof(LsAppCommand) };
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(LsAppCommand));
+            controller.SetDefaultCommand(typeof(LsAppCommand));
 
             int exitCode = controller.Execute(new[] { "-l", "-h", "-S" });
 
@@ -59,7 +63,9 @@ namespace NConsole.Tests
             var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
             commandFactory.Stub(f => f.Create(typeof(LsAppCommand))).Return(command);
 
-            var controller = new ConsoleController(commandFactory) { DefaultCommand = typeof(LsAppCommand) };
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(LsAppCommand));
+            controller.SetDefaultCommand(typeof(LsAppCommand));
 
             int exitCode = controller.Execute(new[] { "--human-readable" });
 
@@ -76,7 +82,9 @@ namespace NConsole.Tests
             var command = MockRepository.GenerateStub<LsAppCommand>();
             var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
             commandFactory.Stub(f => f.Create(typeof(LsAppCommand))).Return(command);
-            var controller = new ConsoleController(commandFactory) { DefaultCommand = typeof(LsAppCommand) };
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(LsAppCommand));
+            controller.SetDefaultCommand(typeof(LsAppCommand));
 
             int exitCode = controller.Execute(new[] { "--ignore=ntuser*", "--ignore=NTUSER*" });
 
@@ -103,6 +111,7 @@ namespace NConsole.Tests
             var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
             commandFactory.Stub(f => f.Create(typeof(CloneCommand))).Return(command);
             var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(CloneCommand));
 
             int exitCode = controller.Execute(new[] { "clone" });
 

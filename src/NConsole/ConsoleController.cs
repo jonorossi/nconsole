@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using NConsole.Internal;
 
 namespace NConsole
@@ -39,13 +37,26 @@ namespace NConsole
 
         //public ArgumentMode Mode { get; set; }
 
-        public Type DefaultCommand { get; set; }
-
+        /// <summary>
+        /// Registers a command so that it can be inspected.
+        /// </summary>
+        /// <param name="commandType">The type of the command to register.</param>
         public void Register(Type commandType)
         {
             if (commandType == null) throw new ArgumentNullException("commandType");
 
             commandRegistry.Register(commandType);
+        }
+
+        /// <summary>
+        /// Configures the default command of the application.
+        /// </summary>
+        /// <param name="commandType">The type of the default command.</param>
+        public void SetDefaultCommand(Type commandType)
+        {
+            if (commandType == null) throw new ArgumentNullException("commandType");
+
+            commandRegistry.SetDefaultCommand(commandType);
         }
 
         /// <summary>
@@ -55,61 +66,75 @@ namespace NConsole
         /// <returns>The exit code that should be used when the process terminates.</returns>
         public int Execute(string[] args)
         {
-            ICommand command = commandFactory.Create(DefaultCommand/*args[0]*/);
+            if (args == null) throw new ArgumentNullException("args");
 
-            Type commandType = DefaultCommand;
-
-            foreach (string arg in args)
+            string commandName = string.Empty;
+            if (args.Length >= 1)
             {
-                int endOfName = arg.IndexOf('=');
-
-                string argName = endOfName >= 0 ? arg.Substring(0, endOfName) : arg;
-
-                // Build up a list of arguments that will later be used for parsing
-                PropertyInfo[] properties = commandType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                foreach (PropertyInfo propertyInfo in properties)
-                {
-                    if (propertyInfo.IsDefined(typeof(ArgumentAttribute), true))
-                    {
-                        var attribute = (ArgumentAttribute)Attribute.GetCustomAttribute(
-                            propertyInfo, typeof(ArgumentAttribute), true);
-
-                        //TODO: Build an ArgumentDescriptor collecting metadata from the property and ArgumentAttribute
-
-                        if (argName == "-" + attribute.ShortName ||
-                            argName == "--" + attribute.LongName)
-                        {
-                            if (propertyInfo.PropertyType == typeof(bool))
-                            {
-                                propertyInfo.SetValue(command, true, null);
-                            }
-                            else if (propertyInfo.PropertyType == typeof(string[]))
-                            {
-                                List<string> values = new List<string>();
-
-                                object currentValue = propertyInfo.GetValue(command, null);
-                                if (currentValue != null)
-                                {
-                                    values.AddRange(((string[])currentValue));
-                                }
-
-                                values.Add(arg.Substring(endOfName + 1));
-
-                                propertyInfo.SetValue(command, values.ToArray(), null);
-                            }
-                            else
-                            {
-                                throw new NotSupportedException("unsupported argument type " +
-                                    propertyInfo.PropertyType.FullName);
-                            }
-
-                            //if (propertyInfo.CanWrite/* || typeof(ICollection).IsAssignableFrom(propertyInfo.PropertyType)*/)
-                        }
-                    }
-                }
+                commandName = args[0];
             }
 
+            CommandDescriptor commandDescriptor = commandRegistry.GetDescriptor(commandName);
+            if (commandDescriptor == null)
+            {
+                Console.Error.WriteLine("Command '{0}' is not recognized.", commandName);
+                return 1;
+            }
+
+            ICommand command = commandFactory.Create(commandDescriptor.CommandType);
             command.Execute();
+
+            //Type commandType = DefaultCommand;
+
+//            foreach (string arg in args)
+//            {
+//                int endOfName = arg.IndexOf('=');
+//
+//                string argName = endOfName >= 0 ? arg.Substring(0, endOfName) : arg;
+//
+                // Build up a list of arguments that will later be used for parsing
+//                PropertyInfo[] properties = commandType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+//                foreach (PropertyInfo propertyInfo in properties)
+//                {
+//                    if (propertyInfo.IsDefined(typeof(ArgumentAttribute), true))
+//                    {
+//                        var attribute = (ArgumentAttribute)Attribute.GetCustomAttribute(
+//                            propertyInfo, typeof(ArgumentAttribute), true);
+//
+                        //TODO: Build an ArgumentDescriptor collecting metadata from the property and ArgumentAttribute
+//
+//                        if (argName == "-" + attribute.ShortName ||
+//                            argName == "--" + attribute.LongName)
+//                        {
+//                            if (propertyInfo.PropertyType == typeof(bool))
+//                            {
+//                                propertyInfo.SetValue(command, true, null);
+//                            }
+//                            else if (propertyInfo.PropertyType == typeof(string[]))
+//                            {
+//                                List<string> values = new List<string>();
+//
+//                                object currentValue = propertyInfo.GetValue(command, null);
+//                                if (currentValue != null)
+//                                {
+//                                    values.AddRange(((string[])currentValue));
+//                                }
+//
+//                                values.Add(arg.Substring(endOfName + 1));
+//
+//                                propertyInfo.SetValue(command, values.ToArray(), null);
+//                            }
+//                            else
+//                            {
+//                                throw new NotSupportedException("unsupported argument type " +
+//                                    propertyInfo.PropertyType.FullName);
+//                            }
+//
+                            //if (propertyInfo.CanWrite/* || typeof(ICollection).IsAssignableFrom(propertyInfo.PropertyType)*/)
+//                        }
+//                    }
+//                }
+//            }
 
             return 0;
         }

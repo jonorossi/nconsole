@@ -14,7 +14,8 @@ namespace NConsole
         /// <see cref="ICommand"/> specified by <paramref name="applicationCommand"/> type.
         /// </summary>
         /// <param name="args">The command line arguments passed by the user of the application.</param>
-        /// <param name="applicationCommand">The <see cref="ICommand"/> that will be executed.</param>
+        /// <param name="applicationCommand">The <see cref="ICommand"/> that will be executed if this console
+        /// application does not support commands.</param>
         /// <returns>The exit code of the executing the specified command</returns>
         public static int Run(string[] args, Type applicationCommand)
         {
@@ -22,7 +23,7 @@ namespace NConsole
             {
                 ConsoleController controller = new ConsoleController();
                 controller.Register(applicationCommand);
-                controller.DefaultCommand = applicationCommand;
+                controller.SetDefaultCommand(applicationCommand);
                 return controller.Execute(args);
             }
             catch (Exception ex)

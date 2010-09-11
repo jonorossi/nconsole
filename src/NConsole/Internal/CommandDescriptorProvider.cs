@@ -18,6 +18,8 @@ namespace NConsole.Internal
 
     internal class CommandDescriptorProvider : ICommandDescriptorProvider
     {
+        private const string CommandClassSuffix = "Command";
+
         public CommandDescriptor BuildDescriptor(Type commandType)
         {
             // Validate the type before we begin processing it
@@ -40,9 +42,9 @@ namespace NConsole.Internal
 
             // Set the default command name (remove the word command from the end if it exists)
             string className = commandType.Name;
-            if (className.EndsWith("Command"))
+            if (className.EndsWith(CommandClassSuffix))
             {
-                descriptor.Name = className.Substring(0, className.Length - 7).ToLower();
+                descriptor.Name = className.Substring(0, className.Length - CommandClassSuffix.Length).ToLower();
             }
             else
             {

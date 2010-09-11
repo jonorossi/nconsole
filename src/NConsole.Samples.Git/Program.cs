@@ -8,6 +8,7 @@ namespace NConsole.Samples.Git
         {
             ConsoleController controller = new ConsoleController();
             controller.Register(typeof(CloneCommand));
+            controller.SetDefaultCommand(typeof(CloneCommand));
             return controller.Execute(args);
 
             //TODO
@@ -28,4 +29,19 @@ namespace NConsole.Samples.Git
             Console.WriteLine("In clone command");
         }
     }
+
+//    [Command(Default = typeof(SourcesListCommand))]
+//    internal class SourcesCommand : SubCommandUsageBase
+//    {
+//    }
+//
+//    [SubCommand(typeof(SourcesCommand), Name = new[] { "list" })]
+//    internal class SourcesListCommand
+//    {
+//    }
+//
+//    [SubCommand(typeof(SourcesCommand), Name = new[] { "add" })]
+//    internal class SourcesAddCommand
+//    {
+//    }
 }

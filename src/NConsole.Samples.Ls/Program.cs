@@ -10,6 +10,9 @@ namespace NConsole.Samples.Ls
             return ConsoleApplication.Run(args, typeof(Program));
         }
 
+        [Argument(Position = 0)]
+        public string[] Paths { get; set; }
+
         public void Execute()
         {
             DirectoryInfo dir = new DirectoryInfo(Directory.GetCurrentDirectory());
@@ -39,9 +42,6 @@ namespace NConsole.Samples.Ls
                 }
             }
         }
-
-        [Argument(Position = 0)]
-        public string[] Paths { get; set; }
 
 //        [Argument(ShortName = "l")]
 //        public bool LongListingFormat { get; set; }

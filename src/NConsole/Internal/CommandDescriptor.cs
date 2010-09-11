@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace NConsole.Internal
 {
@@ -7,6 +8,11 @@ namespace NConsole.Internal
     /// </summary>
     internal class CommandDescriptor
     {
+        public CommandDescriptor()
+        {
+            Aliases = new List<string>();
+        }
+
         /// <summary>
         /// Gets the CLR type that implements this command.
         /// </summary>
@@ -16,5 +22,10 @@ namespace NConsole.Internal
         /// Gets the name of the command that the user can use to invoke this command.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the aliases of this command.
+        /// </summary>
+        public IList<string> Aliases { get; set; }
     }
 }

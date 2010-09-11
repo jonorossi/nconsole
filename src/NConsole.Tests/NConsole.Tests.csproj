@@ -49,6 +49,7 @@
     <Compile Include="CommandClasses\CloneCommand.cs" />
     <Compile Include="CommandClasses\LsAppCommand.cs" />
     <Compile Include="Internal\CommandDescriptorProviderTests.cs" />
+    <Compile Include="Internal\CommandDescriptorTests.cs" />
     <Compile Include="Internal\CommandRegistryTests.cs" />
     <Compile Include="_Stuff\ArgumentAttributeTests.cs" />
     <Compile Include="CommandClasses\DisposableCommand.cs" />

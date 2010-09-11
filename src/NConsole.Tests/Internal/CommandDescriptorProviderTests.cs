@@ -12,7 +12,7 @@ namespace NConsole.Tests.Internal
         {
             CommandDescriptorProvider provider = new CommandDescriptorProvider();
 
-            Exception ex = Assert.Throws<Exception>(() => provider.BuildDescriptor(typeof(int)));
+            var ex = Assert.Throws<Exception>(() => provider.BuildDescriptor(typeof(int)));
 
             Assert.That(ex.Message, Is.EqualTo("Command type 'System.Int32' does not implement ICommand."));
         }
