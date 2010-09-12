@@ -31,7 +31,7 @@ namespace NConsole.Samples.Git
         //[Argument]
         //public DirectoryInfo Directory { get; set; }
 
-        [Argument]
+        [Argument(ShortName = "q", LongName = "quiet")]
         public bool Quiet { get; set; }
 
         public void Execute()
@@ -42,6 +42,7 @@ namespace NConsole.Samples.Git
 
     public class CommitCommand : ICommand
     {
+        [Argument]
         public string Message { get; set; }
 
         public void Execute()

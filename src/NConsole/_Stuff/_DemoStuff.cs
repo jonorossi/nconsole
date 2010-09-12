@@ -1,3 +1,5 @@
+//Should probably check propertyInfo.CanWrite
+
 //            SmartConsole.WriteLine("[color=red]hey[/color]");
 //            SmartConsole.WriteLine("[progressbar value=80 type=hf] 10KiB/s");
 //            SmartConsole.WriteLine("|50%Hello|25%Second Column|25%Third Column");
