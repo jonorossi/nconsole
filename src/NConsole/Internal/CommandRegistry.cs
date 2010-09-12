@@ -13,12 +13,12 @@ namespace NConsole.Internal
     internal class CommandRegistry : ICommandRegistry
     {
         private readonly string defaultCommandName = string.Empty;
+        private readonly ICommandDescriptorBuilder descriptorBuilder = new CommandDescriptorBuilder();
         private readonly List<CommandDescriptor> descriptors = new List<CommandDescriptor>();
-        private readonly ICommandDescriptorProvider provider = new CommandDescriptorProvider();
 
         public void Register(Type commandType)
         {
-            CommandDescriptor descriptor = provider.BuildDescriptor(commandType);
+            CommandDescriptor descriptor = descriptorBuilder.BuildDescriptor(commandType);
             descriptors.Add(descriptor);
         }
 

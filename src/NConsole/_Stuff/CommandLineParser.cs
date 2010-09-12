@@ -62,29 +62,9 @@
 //                    continue;
 //                }
 
-//                // If the string does not start a with the start of a command line argument
-////                if (arg[0] != '/')
-////                {
-////                    if (_defaultArgument != null)
-////                    {
-////                        _defaultArgument.SetValue(argument);
-////                    }
-////                    else
-////                    {
-////                        throw new CommandLineArgumentException(string.Format("Unsupported argument '{0}'.", arg));
-////                    }
-////                }
 
-//                // Determine the name of the argument
-//                int endIndex = arg.IndexOfAny(new[] { ':', '+', '-' }, 1);
-//                string optionName = arg.Substring(1, endIndex == -1 ? arg.Length - 1 : endIndex - 1);
 
-//                // Attempt to get the argument
-//                Argument argument = _arguments[optionName];
-//                if (argument == null)
-//                {
-//                    throw new CommandLineArgumentException(string.Format("Unknown argument '{0}'.", arg));
-//                }
+
 
 //                // If this argument is exclusive and multiple arguments have been passed on the command line then throw an exception
 ////                if (argument.IsExclusive && args.Length > 1)
@@ -99,26 +79,7 @@
 ////                    exclusiveArgument = argument;
 ////                }
 
-//                // Determine the value of the argument
-//                object optionValue;
-//                if (endIndex == -1)
-//                {
-//                    // No value was specified, so it is most likely a flag
-//                    optionValue = ParseValue(argument.ValueType, null);
-//                }
-//                else if (arg[endIndex] == '+' || arg[endIndex] == '-')
-//                {
-//                    // Parse value with the '+' or '-'
-//                    optionValue = ParseValue(argument.ValueType, arg.Substring(endIndex));
-//                }
-//                else
-//                {
-//                    // Parse value without the ':'
-//                    optionValue = ParseValue(argument.ValueType, arg.Substring(endIndex + 1));
-//                }
 
-//                // Set the value of the option
-//                argument.SetValue(optionValue);
 //            }
 
 //            // Create an options object that will be populated with the command line argument details
@@ -221,72 +182,6 @@
 //                return GetOptionUsage(valueType.GetElementType()) + "[,...]";
 //            }
 //            return string.Empty;
-//        }
-
-//        internal object ParseValue(Type type, string value)
-//        {
-//            if (type == typeof(bool))
-//            {
-//                if (string.IsNullOrEmpty(value) || value == "+")
-//                {
-//                    return true;
-//                }
-//                if (value == "-")
-//                {
-//                    return false;
-//                }
-//                throw new CommandLineArgumentException("Boolean arguments can only be followed by '', '+' or '-'.");
-//            }
-//            if (type == typeof(string))
-//            {
-//                // Remove starting and trailing double quotes if they are there
-//                if (value.StartsWith("\"") && value.EndsWith("\""))
-//                {
-//                    //TODO: This needs to support escaped quotes within the string
-//                    return value.Substring(1, value.Length - 2);
-//                }
-//                return value;
-//            }
-//            if (type == typeof(int))
-//            {
-//                return int.Parse(value);
-//            }
-//            if (type == typeof(double))
-//            {
-//                return double.Parse(value);
-//            }
-//            if (type.IsEnum)
-//            {
-//                return Enum.Parse(type, value, true);
-//            }
-//            if (type.IsArray)
-//            {
-//                // Determine the type of the array's elements
-//                Type elementType;
-//                if (type.GetElementType().IsEnum)
-//                {
-//                    elementType = type.GetElementType();
-//                }
-//                else
-//                {
-//                    elementType = typeof(string);
-//                }
-
-//                // Parse each item and return them
-//                ArrayList values = new ArrayList();
-//                foreach (string item in value.Split(','))
-//                {
-//                    values.Add(ParseValue(elementType, item));
-//                }
-
-//                return values.ToArray(type.GetElementType());
-//            }
-//            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-//            {
-//                Type underlyingType = type.GetGenericArguments()[0];
-//                return ParseValue(underlyingType, value);
-//            }
-//            throw new CommandLineArgumentException(string.Format("Unsupported argument type '{0}' or value '{1}'.", type.FullName, value));
 //        }
 //    }
 //}

@@ -1,4 +1,3 @@
-using System;
 using NConsole.Tests.CommandClasses;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -15,7 +14,7 @@ namespace NConsole.Tests
 
             int exitCode = controller.Execute(new string[] { });
 
-            Assert.AreEqual(1, exitCode);
+            Assert.That(exitCode, Is.EqualTo(1));
         }
 
         [Test]
@@ -31,7 +30,7 @@ namespace NConsole.Tests
             int exitCode = controller.Execute(new string[] { });
 
             command.AssertWasCalled(c => c.Execute());
-            Assert.AreEqual(0, exitCode);
+            Assert.That(exitCode, Is.EqualTo(0));
             Assert.IsFalse(command.LongListingFormat);
             Assert.IsFalse(command.HumanReadableSizes);
             Assert.IsFalse(command.SortByFileSize);
@@ -50,7 +49,7 @@ namespace NConsole.Tests
             int exitCode = controller.Execute(new[] { "-l", "-h", "-S" });
 
             command.AssertWasCalled(c => c.Execute());
-            Assert.AreEqual(0, exitCode);
+            Assert.That(exitCode, Is.EqualTo(0));
             Assert.IsTrue(command.LongListingFormat);
             Assert.IsTrue(command.HumanReadableSizes);
             Assert.IsTrue(command.SortByFileSize);
@@ -70,7 +69,7 @@ namespace NConsole.Tests
             int exitCode = controller.Execute(new[] { "--human-readable" });
 
             command.AssertWasCalled(c => c.Execute());
-            Assert.AreEqual(0, exitCode);
+            Assert.That(exitCode, Is.EqualTo(0));
             Assert.IsFalse(command.LongListingFormat);
             Assert.IsTrue(command.HumanReadableSizes);
             Assert.IsFalse(command.SortByFileSize);
@@ -89,7 +88,7 @@ namespace NConsole.Tests
             int exitCode = controller.Execute(new[] { "--ignore=ntuser*", "--ignore=NTUSER*" });
 
             command.AssertWasCalled(c => c.Execute());
-            Assert.AreEqual(0, exitCode);
+            Assert.That(exitCode, Is.EqualTo(0));
             CollectionAssert.AreEqual(new[] { "ntuser*", "NTUSER*" }, command.IgnorePatterns);
         }
 
@@ -99,9 +98,9 @@ namespace NConsole.Tests
             var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
             var controller = new ConsoleController(commandFactory);
 
-            Exception ex = Assert.Throws<Exception>(() => controller.Execute(new[] { "donothing" }));
+            int exitCode = controller.Execute(new[] { "donothing" });
 
-            Assert.AreEqual("Command 'donothing' was not found.", ex.Message);
+            Assert.That(exitCode, Is.EqualTo(1));
         }
 
         [Test]
@@ -116,7 +115,7 @@ namespace NConsole.Tests
             int exitCode = controller.Execute(new[] { "clone" });
 
             command.AssertWasCalled(c => c.Execute());
-            Assert.AreEqual(0, exitCode);
+            Assert.That(exitCode, Is.EqualTo(0));
         }
     }
 }

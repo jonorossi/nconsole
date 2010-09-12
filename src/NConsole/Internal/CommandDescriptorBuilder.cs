@@ -7,7 +7,7 @@ namespace NConsole.Internal
     /// Defines the contract for implementations that should collect from one or more sources the meta
     /// information that dictates the <see cref="ICommand"/> behavior and the arguments it exposes.
     /// </summary>
-    internal interface ICommandDescriptorProvider
+    internal interface ICommandDescriptorBuilder
     {
         /// <summary>
         /// Builds a <see cref="CommandDescriptor"/> and collects details from the runtime type information.
@@ -17,9 +17,9 @@ namespace NConsole.Internal
         CommandDescriptor BuildDescriptor(Type commandType);
     }
 
-    internal class CommandDescriptorProvider : ICommandDescriptorProvider
+    internal class CommandDescriptorBuilder : ICommandDescriptorBuilder
     {
-        private const string CommandClassSuffix = "Command";
+        private const string CommandTypeSuffix = "Command";
 
         public CommandDescriptor BuildDescriptor(Type commandType)
         {
@@ -57,9 +57,9 @@ namespace NConsole.Internal
 
             // Set the default command name (remove the word command from the end if it exists)
             string className = commandType.Name;
-            if (className.EndsWith(CommandClassSuffix))
+            if (className.EndsWith(CommandTypeSuffix))
             {
-                descriptor.Name = className.Substring(0, className.Length - CommandClassSuffix.Length).ToLower();
+                descriptor.Name = className.Substring(0, className.Length - CommandTypeSuffix.Length).ToLower();
             }
             else
             {
@@ -80,6 +80,7 @@ namespace NConsole.Internal
 
                     ArgumentDescriptor argumentDescriptor = new ArgumentDescriptor();
                     argumentDescriptor.ArgumentType = propertyInfo.PropertyType;
+                    argumentDescriptor.PropertyInfo = propertyInfo;
 
                     // Add the specified short name
                     if (!string.IsNullOrEmpty(attribute.ShortName))

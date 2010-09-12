@@ -1,12 +1,12 @@
 using System;
 
-namespace NConsole
+namespace NConsole.Internal
 {
     /// <summary>
     /// Standard implementation of <see cref="ICommandFactory"/>.
     /// It inspects assemblies looking for concrete classes that extend <see cref="ICommand"/>.
     /// </summary>
-    public class DefaultCommandFactory : ICommandFactory
+    internal class DefaultCommandFactory : ICommandFactory
     {
         public ICommand Create(Type commandType)
         {

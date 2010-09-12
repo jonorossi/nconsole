@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using NConsole.Internal;
 
 namespace NConsole
@@ -10,6 +12,7 @@ namespace NConsole
     {
         private readonly ICommandRegistry commandRegistry;
         private readonly ICommandFactory commandFactory;
+        private readonly List<IArgumentParser> argumentParsers = new List<IArgumentParser>();
 
         /// <summary>
         /// Creates a new <see cref="ConsoleController"/>.
@@ -34,6 +37,8 @@ namespace NConsole
 
             this.commandRegistry = commandRegistry;
             this.commandFactory = commandFactory;
+
+            InitializeArgumentParsers();
         }
 
         //TODO
@@ -70,26 +75,62 @@ namespace NConsole
         {
             if (args == null) throw new ArgumentNullException("args");
 
-            string commandName = string.Empty;
-            if (args.Length >= 1)
+            try
             {
-                commandName = args[0];
+                Execute(new List<string>(args));
             }
-
-            CommandDescriptor commandDescriptor = commandRegistry.GetDescriptor(commandName);
-            if (commandDescriptor == null)
+            catch (Exception ex)
             {
-                Console.Error.WriteLine("Command '{0}' is not recognized.", commandName);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Error.WriteLine(ex.Message);
+                Console.ResetColor();
                 return 1;
             }
 
+            return 0;
+        }
+
+        private void Execute(List<string> args)
+        {
+            string commandName = string.Empty;
+            if (args.Count >= 1 && Regex.IsMatch(args[0], "^[a-z]+$"))
+            {
+                commandName = args[0];
+                args.RemoveAt(0); // Remove the argument we just used
+            }
+
+            // Attempt to find the command for the name
+            CommandDescriptor commandDescriptor = commandRegistry.GetDescriptor(commandName);
+            if (commandDescriptor == null)
+            {
+                throw new Exception(string.Format("Command '{0}' is not recognized.", commandName));
+            }
+
+            // Create an instance of the required command
             ICommand command = commandFactory.Create(commandDescriptor.CommandType);
 
-            //TODO: parse the args and poke them in
+            // Parse the arguments and apply them to the command
+            while (args.Count > 0)
+            {
+                int countBefore = args.Count;
 
+                argumentParsers[0].Apply(args, command, commandDescriptor);
+
+                // Ensure one of the parsers processed at least one argument
+                if (args.Count >= countBefore)
+                {
+                    throw new Exception(string.Format("Unsupported argument '{0}'.", args[0]));
+                }
+            }
+
+            // Execute the code of the command
             command.Execute();
+        }
 
-            return 0;
+        private void InitializeArgumentParsers()
+        {
+            //argumentParsers.Add(new PositionalArgumentParser());
+            argumentParsers.Add(new NamedArgumentParser());
         }
     }
 }

@@ -1,8 +1,9 @@
 using System;
+using NConsole.Internal;
 using NConsole.Tests.CommandClasses;
 using NUnit.Framework;
 
-namespace NConsole.Tests
+namespace NConsole.Tests.Internal
 {
     [TestFixture]
     public class DefaultCommandFactoryTests

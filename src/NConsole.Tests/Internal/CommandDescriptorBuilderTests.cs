@@ -5,14 +5,14 @@ using NUnit.Framework;
 namespace NConsole.Tests.Internal
 {
     [TestFixture]
-    public class CommandDescriptorProviderTests
+    public class CommandDescriptorBuilderTests
     {
-        private readonly CommandDescriptorProvider provider = new CommandDescriptorProvider();
+        private readonly CommandDescriptorBuilder builder = new CommandDescriptorBuilder();
 
         [Test]
         public void ThrowsIfCommandDoesNotImplementICommand()
         {
-            var ex = Assert.Throws<Exception>(() => provider.BuildDescriptor(typeof(int)));
+            var ex = Assert.Throws<Exception>(() => builder.BuildDescriptor(typeof(int)));
 
             Assert.That(ex.Message, Is.EqualTo("Command type 'System.Int32' does not implement ICommand."));
         }
@@ -20,7 +20,7 @@ namespace NConsole.Tests.Internal
         [Test]
         public void CommandTypeIsSet()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestClass));
+            var descriptor = builder.BuildDescriptor(typeof(TestClass));
 
             Assert.That(descriptor.CommandType, Is.EqualTo(typeof(TestClass)));
         }
@@ -28,7 +28,7 @@ namespace NConsole.Tests.Internal
         [Test]
         public void DefaultCommandNameIsTheClassName()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestClass));
+            var descriptor = builder.BuildDescriptor(typeof(TestClass));
 
             Assert.That(descriptor.Name, Is.EqualTo("testclass"));
         }
@@ -36,7 +36,7 @@ namespace NConsole.Tests.Internal
         [Test]
         public void DefaultCommandNameIsTheClassNameWithoutCommand()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestCommand));
+            var descriptor = builder.BuildDescriptor(typeof(TestCommand));
 
             Assert.That(descriptor.Name, Is.EqualTo("test"));
         }
@@ -44,15 +44,15 @@ namespace NConsole.Tests.Internal
         [Test]
         public void CommandsMustHaveAName()
         {
-            var ex = Assert.Throws<Exception>(() => provider.BuildDescriptor(typeof(Command)));
+            var ex = Assert.Throws<Exception>(() => builder.BuildDescriptor(typeof(Command)));
 
-            Assert.That(ex.Message, Is.EqualTo("Command type 'NConsole.Tests.Internal.CommandDescriptorProviderTests+Command' does not provide a command name."));
+            Assert.That(ex.Message, Is.EqualTo("Command type 'NConsole.Tests.Internal.CommandDescriptorBuilderTests+Command' does not provide a command name."));
         }
 
         [Test]
         public void ArgumentDescriptorsAreCreatedOnlyWhenMarkedWithAttribute()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestArgSimpleCommand));
+            var descriptor = builder.BuildDescriptor(typeof(TestArgSimpleCommand));
 
             Assert.That(descriptor.Arguments.Count, Is.EqualTo(1));
         }
@@ -60,17 +60,29 @@ namespace NConsole.Tests.Internal
         [Test]
         public void ArgumentDescriptorsHaveCorrectType()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestArgCommand));
+            var descriptor = builder.BuildDescriptor(typeof(TestArgCommand));
 
             Assert.That(descriptor.Arguments[0].ArgumentType, Is.EqualTo(typeof(string)));
             Assert.That(descriptor.Arguments[1].ArgumentType, Is.EqualTo(typeof(int)));
             Assert.That(descriptor.Arguments[2].ArgumentType, Is.EqualTo(typeof(bool)));
+            Assert.That(descriptor.Arguments[2].ArgumentType, Is.EqualTo(typeof(bool)));
+        }
+
+        [Test]
+        public void ArgumentDescriptorsHaveCorrectPropertyInfo()
+        {
+            var descriptor = builder.BuildDescriptor(typeof(TestArgCommand));
+
+            Assert.That(descriptor.Arguments[0].PropertyInfo.Name, Is.EqualTo("StringArg"));
+            Assert.That(descriptor.Arguments[1].PropertyInfo.Name, Is.EqualTo("IntegerArg"));
+            Assert.That(descriptor.Arguments[2].PropertyInfo.Name, Is.EqualTo("BooleanArg"));
+            Assert.That(descriptor.Arguments[3].PropertyInfo.Name, Is.EqualTo("AnotherArg"));
         }
 
         [Test]
         public void ArgumentAttributeWithoutNameSetShouldGetAutoLongName()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestArgCommand));
+            var descriptor = builder.BuildDescriptor(typeof(TestArgCommand));
 
             Assert.That(descriptor.Arguments[0].ShortNames.Count, Is.EqualTo(0));
             Assert.That(descriptor.Arguments[0].LongNames.Count, Is.EqualTo(1));
@@ -80,7 +92,7 @@ namespace NConsole.Tests.Internal
         [Test]
         public void ArgumentAttributeWithoutNameSetButHasPositionSetShouldNotGetAutoLongName()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestArgCommand));
+            var descriptor = builder.BuildDescriptor(typeof(TestArgCommand));
 
             Assert.That(descriptor.Arguments[1].ShortNames.Count, Is.EqualTo(0));
             Assert.That(descriptor.Arguments[1].LongNames.Count, Is.EqualTo(0));
@@ -89,7 +101,7 @@ namespace NConsole.Tests.Internal
         [Test]
         public void ArgumentAttributeWithShortNameSetShouldNotHaveAnyLongNames()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestArgCommand));
+            var descriptor = builder.BuildDescriptor(typeof(TestArgCommand));
 
             Assert.That(descriptor.Arguments[2].ShortNames.Count, Is.EqualTo(1));
             Assert.That(descriptor.Arguments[2].ShortNames[0], Is.EqualTo("f"));
@@ -99,7 +111,7 @@ namespace NConsole.Tests.Internal
         [Test]
         public void ArgumentAttributeWithLongNameSetShouldNotHaveAnyShortNames()
         {
-            var descriptor = provider.BuildDescriptor(typeof(TestArgCommand));
+            var descriptor = builder.BuildDescriptor(typeof(TestArgCommand));
 
             Assert.That(descriptor.Arguments[3].ShortNames.Count, Is.EqualTo(0));
             Assert.That(descriptor.Arguments[3].LongNames.Count, Is.EqualTo(1));

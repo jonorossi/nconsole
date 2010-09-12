@@ -1,8 +1,3 @@
-//using System;
-//using System.Reflection;
-
-////TODO: Probably need to create an ArgumentDescriptor which has information collected from various bits
-
 //namespace NConsole
 //{
 //    /// <summary>
