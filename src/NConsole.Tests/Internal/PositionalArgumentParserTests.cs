@@ -5,41 +5,46 @@ using NUnit.Framework;
 namespace NConsole.Tests.Internal
 {
     [TestFixture]
-    public class NamedArgumentParserTests
+    public class PositionalArgumentParserTests
     {
         private readonly CommandDescriptorBuilder descriptorBuilder = new CommandDescriptorBuilder();
-        private readonly NamedArgumentParser parser = new NamedArgumentParser();
+        private readonly PositionalArgumentParser parser = new PositionalArgumentParser();
 
         [Test]
-        public void SetsBooleanFlagUsingShortName()
+        public void SetsSinglePositionalArguments()
         {
-            List<string> args = new List<string>(new[] { "-f" });
+            List<string> args = new List<string>(new[] { "http://example.org" });
             SimpleCommand command = new SimpleCommand();
             CommandDescriptor descriptor = descriptorBuilder.BuildDescriptor(typeof(SimpleCommand));
 
             parser.Apply(args, command, descriptor);
 
             Assert.That(args, Is.Empty);
-            Assert.That(command.BoolFlag);
+            Assert.That(command.Remote, Is.EqualTo("http://example.org"));
+            Assert.That(command.Local, Is.Null);
         }
 
         [Test]
-        public void SetsBooleanFlagUsingLongName()
+        public void SetsMultiplePositionalArguments()
         {
-            List<string> args = new List<string>(new[] { "--flag" });
+            List<string> args = new List<string>(new[] { "http://example.org", @"C:\temp" });
             SimpleCommand command = new SimpleCommand();
             CommandDescriptor descriptor = descriptorBuilder.BuildDescriptor(typeof(SimpleCommand));
 
             parser.Apply(args, command, descriptor);
 
             Assert.That(args, Is.Empty);
-            Assert.That(command.BoolFlag);
+            Assert.That(command.Remote, Is.EqualTo("http://example.org"));
+            Assert.That(command.Local, Is.EqualTo(@"C:\temp"));
         }
 
         private class SimpleCommand : ICommand
         {
-            [Argument(ShortName = "f", LongName = "flag")]
-            public bool BoolFlag { get; set; }
+            [Argument(Position = 0)]
+            public string Remote { get; set; }
+
+            [Argument(Position = 1)]
+            public string Local { get; set; }
 
             public void Execute()
             {

@@ -18,6 +18,11 @@ namespace NConsole.Internal
         public Type ArgumentType { get; set; }
 
         /// <summary>
+        /// Gets or sets the position this argument is in the chain.
+        /// </summary>
+        public int Position { get; set; }
+
+        /// <summary>
         /// Gets or sets the short names of this argument.
         /// </summary>
         public IList<string> ShortNames { get; private set; }

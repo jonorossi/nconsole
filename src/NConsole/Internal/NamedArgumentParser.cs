@@ -6,53 +6,59 @@ namespace NConsole.Internal
 {
     internal class NamedArgumentParser : IArgumentParser
     {
-        private readonly char[] KeyValueSeparators = new[] { '=' }; // ':', '+', '-'
+        private readonly char[] KeyValueSeparators = new[] { '=', ':' };
+        private readonly char[] ValueSuffixes = new[] { '+', '-' };
+
+        private enum Prefix { Dash, DoubleDash, ForwardSlash }
 
         public void Apply(IList<string> args, ICommand command, CommandDescriptor commandDescriptor)
         {
             string arg = args[0];
 
-            // If the argument does not start a with the start of a named argument, we don't have any changes to make
-            if (arg[0] != '-') return;
-
             // Determine the name of the argument
-            bool? useLongName;
+            Prefix prefix;
             int endIndex;
             string argName;
             if (arg.StartsWith("--"))
             {
-                useLongName = true;
+                prefix = Prefix.DoubleDash;
                 endIndex = arg.IndexOfAny(KeyValueSeparators, 2);
                 argName = arg.Substring(2, endIndex == -1 ? arg.Length - 2 : endIndex - 2);
             }
             else if (arg.StartsWith("-"))
             {
-                useLongName = false;
-                endIndex = -1;
+                prefix = Prefix.Dash;
+                endIndex = arg.IndexOfAny(KeyValueSeparators, 1);
+                argName = arg.Substring(1, endIndex == -1 ? arg.Length - 1 : endIndex - 1);
+            }
+            else if (arg.StartsWith("/"))
+            {
+                prefix = Prefix.ForwardSlash;
+                endIndex = arg.IndexOfAny(KeyValueSeparators, 1);
                 argName = arg.Substring(1, endIndex == -1 ? arg.Length - 1 : endIndex - 1);
             }
             else
             {
-                throw new Exception("Unsupported named argument type.");
+                // If the argument does not start a with the start of a named argument, we don't have any changes to make
+                return;
             }
+
+            // Remove the value suffixes from the argument name (these cannot be separators because args can have a dash in their name)
+            argName = argName.TrimEnd(ValueSuffixes);
 
             // Attempt to find a descriptor for this argument
-            ArgumentDescriptor[] descriptors;
-            if (useLongName.Value)
+            List<ArgumentDescriptor> descriptors = new List<ArgumentDescriptor>();
+            if (prefix == Prefix.DoubleDash || prefix == Prefix.ForwardSlash)
             {
-                descriptors = commandDescriptor.Arguments.Where(a => a.LongNames.Contains(argName)).ToArray();
+                descriptors.AddRange(commandDescriptor.Arguments.Where(a => a.LongNames.Contains(argName)));
             }
-            else if (!useLongName.Value)
+            if (prefix == Prefix.Dash || prefix == Prefix.ForwardSlash)
             {
-                descriptors = commandDescriptor.Arguments.Where(a => a.ShortNames.Contains(argName)).ToArray();
-            }
-            else
-            {
-                throw new Exception("Unsupported named argument type.");
+                descriptors.AddRange(commandDescriptor.Arguments.Where(a => a.ShortNames.Contains(argName)));
             }
 
-            if (descriptors.Length == 0) throw new Exception(string.Format("Unknown argument '{0}'.", arg));
-            if (descriptors.Length > 1) throw new Exception(string.Format("Ambiguous argument '{0}', found {1} descriptors.", arg, descriptors.Length));
+            if (descriptors.Count == 0) throw new Exception(string.Format("Unknown argument '{0}'.", arg));
+            if (descriptors.Count > 1) throw new Exception(string.Format("Ambiguous argument '{0}', found {1} descriptors.", arg, descriptors.Count));
 
             var descriptor = descriptors[0];
 
@@ -61,16 +67,16 @@ namespace NConsole.Internal
 
             // Determine the value of the argument
             object argValue;
-            if (endIndex == -1)
+            if (ValueSuffixes.Contains(arg[arg.Length - 1]))
+            {
+                // Parse value with the '+' or '-'
+                argValue = ValueConverter.ParseValue(descriptor.ArgumentType, arg[arg.Length - 1].ToString(), currentValue);
+            }
+            else if (endIndex == -1)
             {
                 // No value was specified, so it is most likely a flag
                 argValue = ValueConverter.ParseValue(descriptor.ArgumentType, null, currentValue);
             }
-            //else if (arg[endIndex] == '+' || arg[endIndex] == '-')
-            //{
-            //    // Parse value with the '+' or '-'
-            //    argValue = ValueConverter.ParseValue(argument.ValueType, arg.Substring(endIndex));
-            //}
             else
             {
                 // Parse value without the ':'

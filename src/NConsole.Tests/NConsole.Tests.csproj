@@ -48,25 +48,23 @@
   <ItemGroup>
     <Compile Include="CommandClasses\CloneCommand.cs" />
     <Compile Include="CommandClasses\LsAppCommand.cs" />
+    <Compile Include="CommandClasses\StringArgCommand.cs" />
     <Compile Include="Internal\ArgumentDescriptorTests.cs" />
     <Compile Include="Internal\CommandDescriptorBuilderTests.cs" />
     <Compile Include="Internal\CommandDescriptorTests.cs" />
     <Compile Include="Internal\CommandRegistryTests.cs" />
     <Compile Include="Internal\NamedArgumentParserTests.cs" />
+    <Compile Include="Internal\PositionalArgumentParserTests.cs" />
     <Compile Include="Internal\ValueConverterTests.cs" />
-    <Compile Include="_Stuff\ArgumentAttributeTests.cs" />
     <Compile Include="CommandClasses\DisposableCommand.cs" />
     <Compile Include="CommandClasses\NoOpCommand.cs" />
     <Compile Include="ConsoleControllerTests.cs" />
     <Compile Include="_Stuff\CommandLineArgumentCollectionTests.cs" />
-    <Compile Include="_Stuff\ArgumentTests.cs" />
     <Compile Include="_Stuff\CommandLineParserDataTypeTests.cs" />
     <Compile Include="_Stuff\CommandLineParserOutputUsageTests.cs" />
-    <Compile Include="_Stuff\CommandLineParserTests.cs" />
     <Compile Include="Internal\DefaultCommandFactoryTests.cs" />
     <Compile Include="_Stuff\NewApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="_Stuff\AssertEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NConsole\NConsole.csproj">

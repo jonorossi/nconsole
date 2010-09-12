@@ -117,5 +117,70 @@ namespace NConsole.Tests
             command.AssertWasCalled(c => c.Execute());
             Assert.That(exitCode, Is.EqualTo(0));
         }
+
+        [Test]
+        public void Execute_DoubleQuotedStringValue()
+        {
+            var command = MockRepository.GenerateStub<StringArgCommand>();
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            commandFactory.Stub(f => f.Create(typeof(StringArgCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(StringArgCommand));
+            controller.SetDefaultCommand(typeof(StringArgCommand));
+
+            controller.Execute(new[] { "/arg:\"First Second Third\"" });
+
+            command.AssertWasCalled(c => c.Execute());
+            Assert.That(command.Argument, Is.EqualTo("First Second Third"));
+        }
+
+        [Test]
+        public void Execute_DoubleQuotedStringValuesInArray()
+        {
+            var command = MockRepository.GenerateStub<StringArgCommand>();
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            commandFactory.Stub(f => f.Create(typeof(StringArgCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(StringArgCommand));
+            controller.SetDefaultCommand(typeof(StringArgCommand));
+
+            controller.Execute(new[] { "/array:\"First Second Third\",NextValue" });
+
+            command.AssertWasCalled(c => c.Execute());
+            Assert.That(command.ArrayArgument.Length, Is.EqualTo(2));
+            Assert.That(command.ArrayArgument[0], Is.EqualTo("First Second Third"));
+            Assert.That(command.ArrayArgument[1], Is.EqualTo("NextValue"));
+        }
+
+        [Test]
+        public void Execute_EnableThenDisableFlagArgument()
+        {
+            var command = MockRepository.GenerateStub<LsAppCommand>();
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            commandFactory.Stub(f => f.Create(typeof(LsAppCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(LsAppCommand));
+            controller.SetDefaultCommand(typeof(LsAppCommand));
+
+            controller.Execute(new[] { "--human-readable+", "--human-readable-" });
+
+            command.AssertWasCalled(c => c.Execute());
+            Assert.That(command.HumanReadableSizes, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Execute_PositionalArguments()
+        {
+            var command = MockRepository.GenerateStub<CloneCommand>();
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            commandFactory.Stub(f => f.Create(typeof(CloneCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(CloneCommand));
+
+            controller.Execute(new[] { "clone", "the_repo" });
+
+            command.AssertWasCalled(c => c.Execute());
+            Assert.That(command.Repository, Is.EqualTo("the_repo"));
+        }
     }
 }

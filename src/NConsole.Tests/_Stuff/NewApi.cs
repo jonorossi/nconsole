@@ -5,11 +5,6 @@
 //{
 //    public class NewApi
 //    {
-        //TODO: NConsole needs to support large apps (e.g. bricks, git, svn), but still be simple enough to support
-        //      small apps that want full control of the args without commands
-
-        //TODO: Work out how you would still use NConsole for an app like ls
-
         //TODO: Need support for nested commands (for now I think a single level is good enough):
         //    git svn clone http://svn.foo.org/project -T trunk -b branches -t tags
         //    git svn dcommit
@@ -22,7 +17,7 @@
         //bricks install xyz abc
         //bricks search ab
         //bricks help install
-//
+
 //        [Command("cert")]
 //        public class CertificateCommand : ICommand
 //        {

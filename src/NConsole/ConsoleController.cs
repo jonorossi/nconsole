@@ -114,7 +114,10 @@ namespace NConsole
             {
                 int countBefore = args.Count;
 
-                argumentParsers[0].Apply(args, command, commandDescriptor);
+                foreach (IArgumentParser argumentParser in argumentParsers)
+                {
+                    argumentParser.Apply(args, command, commandDescriptor);
+                }
 
                 // Ensure one of the parsers processed at least one argument
                 if (args.Count >= countBefore)
@@ -129,8 +132,8 @@ namespace NConsole
 
         private void InitializeArgumentParsers()
         {
-            //argumentParsers.Add(new PositionalArgumentParser());
             argumentParsers.Add(new NamedArgumentParser());
+            argumentParsers.Add(new PositionalArgumentParser());
         }
     }
 }

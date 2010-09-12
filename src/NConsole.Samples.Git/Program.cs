@@ -8,6 +8,7 @@ namespace NConsole.Samples.Git
         {
             ConsoleController controller = new ConsoleController();
             controller.Register(typeof(CloneCommand));
+            controller.Register(typeof(CommitCommand));
             controller.SetDefaultCommand(typeof(CloneCommand));
             return controller.Execute(args);
 
@@ -25,7 +26,10 @@ namespace NConsole.Samples.Git
     internal class CloneCommand : ICommand
     {
         [Argument(Position = 0/*, Required = true*/)]
-        public string Repository { get; set; }
+        public string/*Uri*/ Repository { get; set; }
+
+        //[Argument]
+        //public DirectoryInfo Directory { get; set; }
 
         [Argument]
         public bool Quiet { get; set; }
@@ -33,6 +37,16 @@ namespace NConsole.Samples.Git
         public void Execute()
         {
             Console.WriteLine("Clone {{ Repository={0}, Quiet={1} }}", Repository, Quiet);
+        }
+    }
+
+    public class CommitCommand : ICommand
+    {
+        public string Message { get; set; }
+
+        public void Execute()
+        {
+            Console.WriteLine("Commit {{ Message={0} }}", Message);
         }
     }
 

@@ -81,6 +81,7 @@ namespace NConsole.Internal
                     ArgumentDescriptor argumentDescriptor = new ArgumentDescriptor();
                     argumentDescriptor.ArgumentType = propertyInfo.PropertyType;
                     argumentDescriptor.PropertyInfo = propertyInfo;
+                    argumentDescriptor.Position = attribute.Position;
 
                     // Add the specified short name
                     if (!string.IsNullOrEmpty(attribute.ShortName))

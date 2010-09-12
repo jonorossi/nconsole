@@ -83,3 +83,9 @@
 //            throw new NotImplementedException();
 //        }
 //    }
+
+// check for missing required arguments
+//foreach (CommandLineArgument arg in _argumentCollection)
+//{
+//    arg.Finish(destination);
+//}

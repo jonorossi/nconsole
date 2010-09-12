@@ -80,6 +80,15 @@ namespace NConsole.Tests.Internal
         }
 
         [Test]
+        public void ArgumentAttributeWithPositionShouldBeSet()
+        {
+            var descriptor = builder.BuildDescriptor(typeof(TestArgCommand));
+
+            Assert.That(descriptor.Arguments[0].Position, Is.EqualTo(-1));
+            Assert.That(descriptor.Arguments[1].Position, Is.EqualTo(0));
+        }
+
+        [Test]
         public void ArgumentAttributeWithoutNameSetShouldGetAutoLongName()
         {
             var descriptor = builder.BuildDescriptor(typeof(TestArgCommand));
