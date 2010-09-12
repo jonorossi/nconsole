@@ -40,6 +40,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internal\ArgumentDescriptor.cs" />
     <Compile Include="Internal\CommandRegistry.cs" />
     <Compile Include="_Stuff\Argument.cs" />
     <Compile Include="ArgumentAttribute.cs" />

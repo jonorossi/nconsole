@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace NConsole.Internal
 {
@@ -28,11 +29,25 @@ namespace NConsole.Internal
             // Build a descriptor
             CommandDescriptor descriptor = new CommandDescriptor();
             CollectDetails(commandType, descriptor);
+            CollectArguments(commandType, descriptor);
 
             // Validate command descriptor after it is built
             ValidateDescriptor(descriptor);
 
             return descriptor;
+        }
+
+        /// <summary>
+        /// Validates the <see cref="Type"/> before we attempt to collect details from it to ensure it's valid.
+        /// </summary>
+        /// <param name="commandType">The <see cref="Type"/> to inspect.</param>
+        private static void ValidateType(Type commandType)
+        {
+            // Ensure we have an ICommand
+            if (!typeof(ICommand).IsAssignableFrom(commandType))
+            {
+                throw new Exception(string.Format("Command type '{0}' does not implement ICommand.", commandType.FullName));
+            }
         }
 
         private void CollectDetails(Type commandType, CommandDescriptor descriptor)
@@ -52,16 +67,43 @@ namespace NConsole.Internal
             }
         }
 
-        /// <summary>
-        /// Validate the <see cref="Type"/> before we attempt to collect details from it to ensure it's valid.
-        /// </summary>
-        /// <param name="commandType">The <see cref="Type"/> to inspect.</param>
-        private static void ValidateType(Type commandType)
+        private void CollectArguments(Type commandType, CommandDescriptor descriptor)
         {
-            // Ensure we have an ICommand
-            if (!typeof(ICommand).IsAssignableFrom(commandType))
+            // Build up a list of arguments that will later be used for parsing
+            PropertyInfo[] properties = commandType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo propertyInfo in properties)
             {
-                throw new Exception(string.Format("Command type '{0}' does not implement ICommand.", commandType.FullName));
+                if (propertyInfo.IsDefined(typeof(ArgumentAttribute), true))
+                {
+                    ArgumentAttribute attribute = (ArgumentAttribute)Attribute.GetCustomAttribute(
+                        propertyInfo, typeof(ArgumentAttribute), true);
+
+                    ArgumentDescriptor argumentDescriptor = new ArgumentDescriptor();
+                    argumentDescriptor.ArgumentType = propertyInfo.PropertyType;
+
+                    // Add the specified short name
+                    if (!string.IsNullOrEmpty(attribute.ShortName))
+                    {
+                        argumentDescriptor.ShortNames.Add(attribute.ShortName);
+                    }
+
+                    // Add the specified long name
+                    if (!string.IsNullOrEmpty(attribute.LongName))
+                    {
+                        argumentDescriptor.LongNames.Add(attribute.LongName);
+                    }
+
+                    // If this isn't a positional argument, and a short or long name has not been set in the attribute,
+                    // then we'll automatically create a long name using the property name
+                    if (attribute.Position == -1 &&
+                        string.IsNullOrEmpty(attribute.ShortName) &&
+                        string.IsNullOrEmpty(attribute.LongName))
+                    {
+                        argumentDescriptor.LongNames.Add(propertyInfo.Name.ToLower());
+                    }
+
+                    descriptor.Arguments.Add(argumentDescriptor);
+                }
             }
         }
 

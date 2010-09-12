@@ -24,23 +24,29 @@ namespace NConsole.Samples.Git
 
     internal class CloneCommand : ICommand
     {
+        [Argument(Position = 0/*, Required = true*/)]
+        public string Repository { get; set; }
+
+        [Argument]
+        public bool Quiet { get; set; }
+
         public void Execute()
         {
-            Console.WriteLine("In clone command");
+            Console.WriteLine("Clone {{ Repository={0}, Quiet={1} }}", Repository, Quiet);
         }
     }
 
-//    [Command(Default = typeof(SourcesListCommand))]
+//    [Command(DefaultSubCommand = typeof(SourcesListCommand))]
 //    internal class SourcesCommand : SubCommandUsageBase
 //    {
 //    }
 //
-//    [SubCommand(typeof(SourcesCommand), Name = new[] { "list" })]
+//    [SubCommand(typeof(SourcesCommand), Names = new[] { "list" })]
 //    internal class SourcesListCommand
 //    {
 //    }
 //
-//    [SubCommand(typeof(SourcesCommand), Name = new[] { "add" })]
+//    [SubCommand(typeof(SourcesCommand), Name = "add")]
 //    internal class SourcesAddCommand
 //    {
 //    }

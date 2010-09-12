@@ -14,6 +14,7 @@ namespace NConsole.Tests.Internal
             Assert.That(descriptor.Name, Is.Null);
             Assert.That(descriptor.CommandType, Is.Null);
             Assert.That(descriptor.Aliases, Is.Not.Null);
+            Assert.That(descriptor.Arguments, Is.Not.Null);
         }
     }
 }

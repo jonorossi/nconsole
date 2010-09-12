@@ -2,7 +2,7 @@
 //{
 //    public enum ArgumentMode
 //    {
-//        Undefined,
+//        Undefined,    //Hybrid??
 //        Posix,
 //        Windows
 //    }
