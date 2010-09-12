@@ -13,8 +13,19 @@ namespace NConsole.Internal
 
         public void Apply(IList<string> args, ICommand command, CommandDescriptor commandDescriptor)
         {
-            string arg = args[0];
+            for (int i = 0; i < args.Count; i++)
+            {
+                if (ApplyArgument(args[i], command, commandDescriptor))
+                {
+                    // Remove the argument because we have processed it
+                    args.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
 
+        private bool ApplyArgument(string arg, ICommand command, CommandDescriptor commandDescriptor)
+        {
             // Determine the name of the argument
             Prefix prefix;
             int endIndex;
@@ -40,7 +51,7 @@ namespace NConsole.Internal
             else
             {
                 // If the argument does not start a with the start of a named argument, we don't have any changes to make
-                return;
+                return false;
             }
 
             // Remove the value suffixes from the argument name (these cannot be separators because args can have a dash in their name)
@@ -62,7 +73,7 @@ namespace NConsole.Internal
 
             var descriptor = descriptors[0];
 
-            // Get current value of this argument 
+            // Get current value of this argument
             object currentValue = descriptor.PropertyInfo.GetValue(command, null);
 
             // Determine the value of the argument
@@ -83,11 +94,11 @@ namespace NConsole.Internal
                 argValue = ValueConverter.ParseValue(descriptor.ArgumentType, arg.Substring(endIndex + 1), currentValue);
             }
 
-            // Set the value of the option
+            // Set the value of the argument
             descriptor.PropertyInfo.SetValue(command, argValue, null);
 
-            // Remove the first argument because we have processed it
-            args.RemoveAt(0);
+            // We have processed this argument, so indicate this
+            return true;
         }
     }
 }

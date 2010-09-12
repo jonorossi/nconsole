@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CommandClasses\CloneCommand.cs" />
     <Compile Include="CommandClasses\LsAppCommand.cs" />
+    <Compile Include="CommandClasses\PositionalStringArrayArgCommand.cs" />
     <Compile Include="CommandClasses\StringArgCommand.cs" />
     <Compile Include="Internal\ArgumentDescriptorTests.cs" />
     <Compile Include="Internal\CommandDescriptorBuilderTests.cs" />

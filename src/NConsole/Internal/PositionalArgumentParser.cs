@@ -16,14 +16,28 @@ namespace NConsole.Internal
                 ArgumentDescriptor descriptor = descriptors.FirstOrDefault();
                 if (descriptor == null)
                 {
+                    // We are out of positional descriptors
                     return;
                 }
 
-                descriptor.PropertyInfo.SetValue(command, arg, null);
+                // Get current value of this argument
+                object currentValue = descriptor.PropertyInfo.GetValue(command, null);
 
-                // Remove the first descriptor and the first argument because we have used them
-                descriptors.RemoveAt(0);
+                // Determine the value of the argument
+                object argValue = ValueConverter.ParseValue(descriptor.ArgumentType, arg, currentValue);
+
+                // Set the value of the argument
+                descriptor.PropertyInfo.SetValue(command, argValue, null);
+
+                // Remove the argument because we have processed it
                 args.RemoveAt(0);
+
+                // Remove the first descriptor if it isn't an array because we have used it.
+                // Keep array descriptors so we can keep using it
+                if (!descriptor.ArgumentType.IsArray)
+                {
+                    descriptors.RemoveAt(0);
+                }
             }
         }
     }

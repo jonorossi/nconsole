@@ -110,17 +110,15 @@ namespace NConsole
             ICommand command = commandFactory.Create(commandDescriptor.CommandType);
 
             // Parse the arguments and apply them to the command
-            while (args.Count > 0)
+            if (args.Count > 0)
             {
-                int countBefore = args.Count;
-
                 foreach (IArgumentParser argumentParser in argumentParsers)
                 {
                     argumentParser.Apply(args, command, commandDescriptor);
                 }
 
-                // Ensure one of the parsers processed at least one argument
-                if (args.Count >= countBefore)
+                // Ensure that all the arguments have been parsed
+                if (args.Count > 0)
                 {
                     throw new Exception(string.Format("Unsupported argument '{0}'.", args[0]));
                 }

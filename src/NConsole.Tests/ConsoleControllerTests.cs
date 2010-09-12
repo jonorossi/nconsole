@@ -182,5 +182,38 @@ namespace NConsole.Tests
             command.AssertWasCalled(c => c.Execute());
             Assert.That(command.Repository, Is.EqualTo("the_repo"));
         }
+
+        [Test]
+        public void Execute_MixOfPositionalAndNamedArgumentsWithArrays()
+        {
+            var command = MockRepository.GenerateStub<PositionalStringArrayArgCommand>();
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            commandFactory.Stub(f => f.Create(typeof(PositionalStringArrayArgCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(PositionalStringArrayArgCommand));
+
+            controller.Execute(new[] { "positionalstringarrayarg", "value_one", "--arg", "value_two" });
+
+            command.AssertWasCalled(c => c.Execute());
+            Assert.That(command.ArrayArgument, Is.EqualTo(new[] { "value_one", "value_two" }));
+            Assert.That(command.Argument);
+        }
+
+        [Test]
+        public void Execute_MixOfPositionalAndNamedArgumentsWithMultiplePositionalArguments()
+        {
+            var command = MockRepository.GenerateStub<PositionalStringArgCommand>();
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            commandFactory.Stub(f => f.Create(typeof(PositionalStringArgCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(PositionalStringArgCommand));
+
+            controller.Execute(new[] { "positionalstringarg", "value_one", "--arg", "value_two" });
+
+            command.AssertWasCalled(c => c.Execute());
+            Assert.That(command.Argument1, Is.EqualTo("value_one"));
+            Assert.That(command.Argument2, Is.EqualTo("value_two"));
+            Assert.That(command.FlagArgument);
+        }
     }
 }
