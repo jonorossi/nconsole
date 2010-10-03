@@ -1,3 +1,4 @@
+using System;
 using NConsole.Tests.CommandClasses;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -214,6 +215,32 @@ namespace NConsole.Tests
             Assert.That(command.Argument1, Is.EqualTo("value_one"));
             Assert.That(command.Argument2, Is.EqualTo("value_two"));
             Assert.That(command.FlagArgument);
+        }
+
+        [Test]
+        public void RethrowExceptions_True()
+        {
+            var command = MockRepository.GenerateStub<ThrowingCommand>();
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            commandFactory.Stub(f => f.Create(typeof(ThrowingCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(ThrowingCommand));
+            controller.RethrowExceptions = true;
+
+            Assert.Throws<Exception>(delegate { controller.Execute(new[] { "throwing" }); });
+        }
+
+        [Test]
+        public void RethrowExceptions_False()
+        {
+            var command = MockRepository.GenerateStub<ThrowingCommand>();
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            commandFactory.Stub(f => f.Create(typeof(ThrowingCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(ThrowingCommand));
+            controller.RethrowExceptions = false;
+
+            Assert.DoesNotThrow(delegate { controller.Execute(new[] { "throwing" }); });
         }
     }
 }

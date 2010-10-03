@@ -45,6 +45,11 @@ namespace NConsole
         //public ArgumentMode Mode { get; set; }
 
         /// <summary>
+        /// Gets or sets whether caught exceptions should be rethrown to ease debugging.
+        /// </summary>
+        public bool RethrowExceptions { get; set; }
+
+        /// <summary>
         /// Registers a command so that it can be inspected.
         /// </summary>
         /// <param name="commandType">The type of the command to register.</param>
@@ -84,6 +89,13 @@ namespace NConsole
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Error.WriteLine(ex.Message);
                 Console.ResetColor();
+
+                // Rethrow the exception if configured
+                if (RethrowExceptions)
+                {
+                    throw;
+                }
+
                 return 1;
             }
 

@@ -50,6 +50,7 @@
     <Compile Include="CommandClasses\LsAppCommand.cs" />
     <Compile Include="CommandClasses\PositionalStringArrayArgCommand.cs" />
     <Compile Include="CommandClasses\StringArgCommand.cs" />
+    <Compile Include="CommandClasses\ThrowingCommand.cs" />
     <Compile Include="Internal\ArgumentDescriptorTests.cs" />
     <Compile Include="Internal\CommandDescriptorBuilderTests.cs" />
     <Compile Include="Internal\CommandDescriptorTests.cs" />
