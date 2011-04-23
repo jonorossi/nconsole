@@ -9,6 +9,7 @@ namespace NConsole.Samples.Git
             ConsoleController controller = new ConsoleController();
             controller.Register(typeof(CloneCommand));
             controller.Register(typeof(CommitCommand));
+            controller.Register(typeof(RemoteCommand));
             controller.SetDefaultCommand(typeof(CloneCommand));
             return controller.Execute(args);
 
@@ -51,18 +52,28 @@ namespace NConsole.Samples.Git
         }
     }
 
-//    [Command(DefaultSubCommand = typeof(SourcesListCommand))]
-//    internal class SourcesCommand : SubCommandUsageBase
-//    {
-//    }
-//
-//    [SubCommand(typeof(SourcesCommand), Names = new[] { "list" })]
-//    internal class SourcesListCommand
-//    {
-//    }
-//
-//    [SubCommand(typeof(SourcesCommand), Name = "add")]
-//    internal class SourcesAddCommand
-//    {
-//    }
+    [Command("remote")]
+    [SubCommand(typeof(RemoteAddCommand))]
+    internal class RemoteCommand : ICommand
+    {
+        public void Execute()
+        {
+            Console.WriteLine("origin");
+        }
+    }
+
+    [Command("add")]
+    internal class RemoteAddCommand : ICommand
+    {
+        [Argument(Position = 0)]
+        public string Name { get; set; }
+
+        [Argument(Position = 1)]
+        public string Url { get; set; }
+
+        public void Execute()
+        {
+            Console.WriteLine("Added {0} pointing to {1}", Name, Url);
+        }
+    }
 }

@@ -112,10 +112,24 @@ namespace NConsole
             }
 
             // Attempt to find the command for the name
-            CommandDescriptor commandDescriptor = commandRegistry.GetDescriptor(commandName);
+            CommandDescriptor commandDescriptor = commandRegistry.GetDescriptor(commandName, null);
             if (commandDescriptor == null)
             {
                 throw new Exception(string.Format("Command '{0}' is not recognized.", commandName));
+            }
+
+            // Determine if this is a call for a sub command
+            while (args.Count >= 1 && Regex.IsMatch(args[0], "^[a-z]+$"))
+            {
+                commandName = args[0];
+                var subCommandDescriptor = commandRegistry.GetDescriptor(commandName, commandDescriptor);
+                if (subCommandDescriptor == null)
+                {
+                    break;
+                }
+
+                commandDescriptor = subCommandDescriptor;
+                args.RemoveAt(0); // Remove the argument we just used
             }
 
             // Create an instance of the required command

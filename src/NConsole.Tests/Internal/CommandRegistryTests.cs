@@ -1,5 +1,6 @@
 using System;
 using NConsole.Internal;
+using NConsole.Tests.CommandClasses;
 using NUnit.Framework;
 
 namespace NConsole.Tests.Internal
@@ -13,9 +14,33 @@ namespace NConsole.Tests.Internal
             CommandRegistry commandRegistry = new CommandRegistry();
             commandRegistry.Register(typeof(TestCommand));
 
-            CommandDescriptor descriptor = commandRegistry.GetDescriptor("test");
+            CommandDescriptor descriptor = commandRegistry.GetDescriptor("test", null);
 
             Assert.That(descriptor.Name, Is.EqualTo("test"));
+        }
+
+        [Test]
+        public void GetDescriptor_ReturnsRegisteredCommandUsingCommandAttribute()
+        {
+            CommandRegistry commandRegistry = new CommandRegistry();
+            commandRegistry.Register(typeof(TestAttributedCommand));
+
+            CommandDescriptor descriptor = commandRegistry.GetDescriptor("overridden", null);
+
+            Assert.That(descriptor.Name, Is.EqualTo("overridden"));
+        }
+
+        [Test]
+        public void GetDescriptor_ReturnsRegisteredSubCommand()
+        {
+            CommandRegistry commandRegistry = new CommandRegistry();
+            commandRegistry.Register(typeof(RemoteCommand));
+
+            CommandDescriptor remoteDescriptor = commandRegistry.GetDescriptor("remote", null);
+            CommandDescriptor addDescriptor = commandRegistry.GetDescriptor("add", remoteDescriptor);
+
+            Assert.That(remoteDescriptor.Name, Is.EqualTo("remote"));
+            Assert.That(addDescriptor.Name, Is.EqualTo("add"));
         }
 
         [Test]
@@ -35,7 +60,7 @@ namespace NConsole.Tests.Internal
             commandRegistry.Register(typeof(TestCommand));
             commandRegistry.SetDefaultCommand(typeof(TestCommand));
 
-            CommandDescriptor descriptor = commandRegistry.GetDescriptor("");
+            CommandDescriptor descriptor = commandRegistry.GetDescriptor("", null);
 
             Assert.That(descriptor.Name, Is.EqualTo("test"));
         }
@@ -43,6 +68,14 @@ namespace NConsole.Tests.Internal
         #region Test Commands
 
         private class TestCommand : ICommand
+        {
+            public void Execute()
+            {
+            }
+        }
+
+        [Command("overridden")]
+        private class TestAttributedCommand : ICommand
         {
             public void Execute()
             {

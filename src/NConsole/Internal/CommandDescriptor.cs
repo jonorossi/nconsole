@@ -12,6 +12,7 @@ namespace NConsole.Internal
         {
             Aliases = new List<string>();
             Arguments = new List<ArgumentDescriptor>();
+            SubCommands = new List<CommandDescriptor>();
         }
 
         /// <summary>
@@ -33,5 +34,10 @@ namespace NConsole.Internal
         /// Gets or sets the arguments supported by this command.
         /// </summary>
         public IList<ArgumentDescriptor> Arguments { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the subcommands provided by this command.
+        /// </summary>
+        public IList<CommandDescriptor> SubCommands { get; private set; }
     }
 }

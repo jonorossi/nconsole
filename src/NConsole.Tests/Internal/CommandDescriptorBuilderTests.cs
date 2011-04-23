@@ -1,5 +1,6 @@
 using System;
 using NConsole.Internal;
+using NConsole.Tests.CommandClasses;
 using NUnit.Framework;
 
 namespace NConsole.Tests.Internal
@@ -42,11 +43,29 @@ namespace NConsole.Tests.Internal
         }
 
         [Test]
+        public void CommandNameIsOverriddenByCommandAttribute()
+        {
+            var descriptor = builder.BuildDescriptor(typeof(TestAttributedCommand));
+
+            Assert.That(descriptor.Name, Is.EqualTo("overridden"));
+        }
+
+        [Test]
         public void CommandsMustHaveAName()
         {
             var ex = Assert.Throws<Exception>(() => builder.BuildDescriptor(typeof(Command)));
 
             Assert.That(ex.Message, Is.EqualTo("Command type 'NConsole.Tests.Internal.CommandDescriptorBuilderTests+Command' does not provide a command name."));
+        }
+
+        [Test]
+        public void CreatesDescriptorsForSubCommands()
+        {
+            var descriptor = builder.BuildDescriptor(typeof(RemoteCommand));
+
+            Assert.That(descriptor.Name, Is.EqualTo("remote"));
+            Assert.That(descriptor.SubCommands.Count, Is.EqualTo(1));
+            Assert.That(descriptor.SubCommands[0].Name, Is.EqualTo("add"));
         }
 
         [Test]
@@ -137,6 +156,14 @@ namespace NConsole.Tests.Internal
         }
 
         private class TestCommand : ICommand
+        {
+            public void Execute()
+            {
+            }
+        }
+
+        [Command("overridden")]
+        private class TestAttributedCommand : ICommand
         {
             public void Execute()
             {

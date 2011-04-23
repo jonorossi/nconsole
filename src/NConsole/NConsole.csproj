@@ -50,7 +50,7 @@
     <Compile Include="_Stuff\Argument.cs" />
     <Compile Include="ArgumentAttribute.cs" />
     <Compile Include="_Stuff\ArgumentMode.cs" />
-    <Compile Include="_Stuff\CommandAttribute.cs" />
+    <Compile Include="CommandAttribute.cs" />
     <Compile Include="_Stuff\CommandInspector.cs" />
     <Compile Include="_Stuff\CommandLineArgumentCollection.cs" />
     <Compile Include="ConsoleController.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="Internal\DefaultCommandFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\CommandDescriptorBuilder.cs" />
-    <Compile Include="_Stuff\SubCommandAttribute.cs" />
+    <Compile Include="SubCommandAttribute.cs" />
     <Compile Include="_Stuff\_DemoStuff.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

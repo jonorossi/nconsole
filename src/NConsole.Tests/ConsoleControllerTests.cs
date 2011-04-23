@@ -218,6 +218,21 @@ namespace NConsole.Tests
         }
 
         [Test]
+        public void Execute_CreatesAndDelegatesToSubCommand()
+        {
+            var commandFactory = MockRepository.GenerateStub<ICommandFactory>();
+            RemoteAddCommand command = new RemoteAddCommand();
+            commandFactory.Stub(f => f.Create(typeof(RemoteAddCommand))).Return(command);
+            var controller = new ConsoleController(commandFactory);
+            controller.Register(typeof(RemoteCommand));
+            controller.RethrowExceptions = true;
+
+            controller.Execute(new[] { "remote", "add", "test_name" });
+
+            Assert.That(command.Name, Is.EqualTo("test_name"));
+        }
+
+        [Test]
         public void RethrowExceptions_True()
         {
             var command = MockRepository.GenerateStub<ThrowingCommand>();

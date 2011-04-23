@@ -7,7 +7,7 @@ namespace NConsole.Internal
     {
         void Register(Type commandType);
         void SetDefaultCommand(Type commandType);
-        CommandDescriptor GetDescriptor(string commandName);
+        CommandDescriptor GetDescriptor(string commandName, CommandDescriptor parentCommand);
     }
 
     internal class CommandRegistry : ICommandRegistry
@@ -37,8 +37,16 @@ namespace NConsole.Internal
             throw new Exception(string.Format("Command {0} is not registered.", commandType.FullName));
         }
 
-        public CommandDescriptor GetDescriptor(string commandName)
+        public CommandDescriptor GetDescriptor(string commandName, CommandDescriptor parentCommand)
         {
+            // Get the list of descriptors to look through
+            IList<CommandDescriptor> descriptors = this.descriptors;
+            if (parentCommand != null)
+            {
+                descriptors = parentCommand.SubCommands;
+            }
+
+            // Try to find a matching descriptor
             foreach (CommandDescriptor descriptor in descriptors)
             {
                 if (descriptor.Name == commandName ||

@@ -30,6 +30,7 @@ namespace NConsole.Internal
             CommandDescriptor descriptor = new CommandDescriptor();
             CollectDetails(commandType, descriptor);
             CollectArguments(commandType, descriptor);
+            CollectSubCommands(commandType, descriptor);
 
             // Validate command descriptor after it is built
             ValidateDescriptor(descriptor);
@@ -50,24 +51,35 @@ namespace NConsole.Internal
             }
         }
 
-        private void CollectDetails(Type commandType, CommandDescriptor descriptor)
+        private static void CollectDetails(Type commandType, CommandDescriptor descriptor)
         {
             // Store the CLR type
             descriptor.CommandType = commandType;
 
-            // Set the default command name (remove the word command from the end if it exists)
-            string className = commandType.Name;
-            if (className.EndsWith(CommandTypeSuffix))
+            // Work out the name of the command
+            if (commandType.IsDefined(typeof(CommandAttribute), false))
             {
-                descriptor.Name = className.Substring(0, className.Length - CommandTypeSuffix.Length).ToLower();
+                // The command class has a command attribute on it so we'll get the name from it
+                CommandAttribute attribute = (CommandAttribute)Attribute.GetCustomAttribute(
+                    commandType, typeof(CommandAttribute), false);
+                descriptor.Name = attribute.Name;
             }
             else
             {
-                descriptor.Name = className.ToLower();
+                // Set the default command name (remove the word command from the end if it exists)
+                string className = commandType.Name;
+                if (className.EndsWith(CommandTypeSuffix))
+                {
+                    descriptor.Name = className.Substring(0, className.Length - CommandTypeSuffix.Length).ToLower();
+                }
+                else
+                {
+                    descriptor.Name = className.ToLower();
+                }
             }
         }
 
-        private void CollectArguments(Type commandType, CommandDescriptor descriptor)
+        private static void CollectArguments(Type commandType, CommandDescriptor descriptor)
         {
             // Build up a list of arguments that will later be used for parsing
             PropertyInfo[] properties = commandType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -106,6 +118,16 @@ namespace NConsole.Internal
 
                     descriptor.Arguments.Add(argumentDescriptor);
                 }
+            }
+        }
+
+        private void CollectSubCommands(Type commandType, CommandDescriptor descriptor)
+        {
+            foreach (SubCommandAttribute subCommandAttribute in
+                Attribute.GetCustomAttributes(commandType, typeof(SubCommandAttribute), false))
+            {
+                var subCommandDescriptor = BuildDescriptor(subCommandAttribute.CommandType);
+                descriptor.SubCommands.Add(subCommandDescriptor);
             }
         }
 
