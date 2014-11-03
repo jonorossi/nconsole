@@ -2,8 +2,9 @@
 |     Changes to NConsole     |
 +=============================+
 
-<Unreleased>
-============
+0.2.0 (2011-04-23)
+============================
+- Massive refactoring to support commands/verbs rather than just a set of options.
 - CommandLineArgumentAttribute was renamed to ArgumentAttribute
 - CommandLineArgument was renamed to Argument
 - ArgumentAttribute.Required was renamed to Mandatory
