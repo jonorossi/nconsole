@@ -6,7 +6,7 @@ using NConsole.Internal;
 namespace NConsole
 {
     /// <summary>
-    /// Controls the registeration of commands and execution of a console application.
+    /// Controls the registration of commands and execution of a console application.
     /// </summary>
     public class ConsoleController
     {
